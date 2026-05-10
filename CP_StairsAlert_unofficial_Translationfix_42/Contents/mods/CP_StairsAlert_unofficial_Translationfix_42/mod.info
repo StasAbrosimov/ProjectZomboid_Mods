@@ -1,9 +1,9 @@
-name=Stairs Alert Unoficial Translation Fix 42.15+
+name=Stairs Alert Unofficial Translation Fix 42.15+
 id=CP_StairsAlert_unofficial_Translationfix_42
 poster=poster.png
 icon=icon.png
 authors=KernelPanic
-modversion=0.0.1
+modversion=0.0.2
 description=This mod fix translations files for mod Stairs Alert by BitBraven
 Mods=BB_StairsAlert
 WorkshopItems=3044807092

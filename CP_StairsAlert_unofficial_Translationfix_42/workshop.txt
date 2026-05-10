@@ -1,5 +1,5 @@
 version=1
-id=3723518888
+id=3723543546
 title=Stairs Alert Unofficial Translation Fix 42.15+
 description=For build 42.15+
 description=This mod fix translations files (add new translation files format) for mod Stairs Alert by BitBraven.
