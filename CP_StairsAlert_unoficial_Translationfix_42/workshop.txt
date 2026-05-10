@@ -1,0 +1,12 @@
+version=1
+id=3723518888
+title=Stairs Alert Unoficial Translation Fix 42.15+
+description=For build 42.15+
+description=This mod fix translations files (add new translation files format) for mod Stairs Alert by BitBraven.
+description=Support languages: CH, CN, DE, EN, ES, FR, IT, JP, PT, PTBR, UA, RU
+description=!!!!
+description=This modification requires the original "Stairs Alert" mod by BitBraven to work.
+description=This is just a translation fix.
+description=!!!!
+tags=Build 42;Language/Translation;QoL
+visibility=public

@@ -1,0 +1,13 @@
+{
+    "Sandbox_StairsAlert": "Оповіщення про сходи",
+    "Sandbox_StairsAlert_DisplayIfNoZombies": "Відображати, навідь якщо немає зомбі",
+    "Sandbox_StairsAlert_DisplayIfNoZombies_tooltip": "Визначає, чи гравці щось скажуть, якщо побачать зомбі нагорі, чи ні.",
+    "Sandbox_StairsAlert_DisplayZombieAmount": "Відображати кількість зомбі",
+    "Sandbox_StairsAlert_DisplayZombieAmount_tooltip": "Визначає, чи гравці включатимуть кількість зомбі, яких вони бачать, у свої репліки.",
+    "Sandbox_StairsAlert_DisplayMarker": "Відображати маркер",
+    "Sandbox_StairsAlert_DisplayMarker_tooltip": "Відображає 2D-маркер на землі, де, ймовірно, знаходиться зомбі нагорі.",
+    "Sandbox_StairsAlert_ContinuousScanDelay": "Затримка безперервного сканування",
+    "Sandbox_StairsAlert_ContinuousScanDelay_tooltip": "Автоматично сканує сходи поблизу через задані інтервали. Якщо сходи виявлено, гравець автоматично отримає сповіщення про зомбі поблизу.<br>Встановіть значення 0, щоб вимкнути.",
+    "Sandbox_StairsAlert_VisionRadius": "Радіус виявлення",
+    "Sandbox_StairsAlert_VisionRadius_tooltip": "Визначає радіус навколо сходів, де можна побачити зомбі.<br>Встановлення більших значень дозволяє гравцеві бачити зомбі здалеку.<br>Вам все одно потрібно бути на сходах!"
+}
