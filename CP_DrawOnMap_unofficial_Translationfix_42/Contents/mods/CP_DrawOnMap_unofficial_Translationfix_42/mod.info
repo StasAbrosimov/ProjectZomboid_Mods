@@ -1,0 +1,9 @@
+name=DrawOnMap unofficial Translationfix 42.15+
+id=CP_DrawOnMap_unofficial_Translationfix_42
+poster=poster.png
+icon=icon.png
+authors=KernelPanic
+modversion=0.0.2
+description=This mod fix translations files for mod DrawOnMap by Notloc
+Mods=DRAW_ON_MAP
+WorkshopItems=2804531012
