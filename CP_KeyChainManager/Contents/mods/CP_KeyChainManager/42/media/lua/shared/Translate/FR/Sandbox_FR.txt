@@ -1,5 +1,0 @@
-Sandbox_FR = {
-    Sandbox_ShowKeyOrigin = "Show Key Origin",
-	Sandbox_ShowKeyOrigin_CompassNeeded = "Une boussole est nécessaire pour afficher l'origine de la clé",
-	Sandbox_ShowKeyOrigin_CompassNeeded_tooltip = "Lorsque cette option est activée, l'origine de la clé ne s'affiche que si vous possédez une boussole dans votre inventaire.",
-}

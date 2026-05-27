@@ -1,3 +1,0 @@
-Tooltip_EN = {
-	Tooltip_SKO_Toggle = "Change the visibility of the vector from the player to the key origin.",
-}

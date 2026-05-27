@@ -1,5 +1,8 @@
 require "ISUI/ISToolTipInv"
 
+local KCMLib = require("KCMLib")
+local KCMConfing = require("KCM_Options");
+
 keyInfo = keyInfo or {}
 
 -- Helper: Rounds a number to the specified number of decimal places
@@ -8,37 +11,7 @@ function keyInfo:_round(num, numDecimalPlaces)
     return math.floor(num * mult + 0.5) / mult
 end
 
--- Helper: Checks if the player has a compass in their inventory.
--- Uses ItemTag.COMPASS on newer B42 builds and falls back to the item type
--- so the sandbox option stays compatible across older variants.
-local function hasCompass(playerObj)
-    local inv = playerObj and playerObj:getInventory()
-    if not inv then
-        return false
-    end
-
-    if ItemTag and ItemTag.COMPASS then
-        local ok, hasTag = pcall(function()
-            return inv:containsTagRecurse(ItemTag.COMPASS)
-        end)
-        if ok then
-            return hasTag
-        end
-    end
-
-    if inv.containsTypeRecurse then
-        local ok, hasType = pcall(function()
-            return inv:containsTypeRecurse("Base.CompassDirectional")
-        end)
-        if ok then
-            return hasType
-        end
-    end
-
-    return false
-end
-
-diff = {}  -- Table to hold vector differences (distance and direction)
+diff = {} -- Table to hold vector differences (distance and direction)
 
 -- Main function: Prepares data to display key origin info in the tooltip
 function keyInfo:initStats(item)
@@ -75,70 +48,124 @@ function keyInfo:initStats(item)
         return false
     end
 
+    print("KCM menu")
     -- Ensure the mod's configuration exists
-    SandboxVars.ShowKeyOrigin = SandboxVars.ShowKeyOrigin or {}
-    local compassNeeded = SandboxVars.ShowKeyOrigin.CompassNeeded
+    local sandBoxV = SandboxVars.KeyChainManager or {}
+    local compassNeeded = sandBoxV.CompassNeeded
+    local showDirectionInfo = KCMConfing.ShowDirectionInItem
+    local showKeyId = KCMConfing.ShowKeyId
+
+    print("compassNeeded " .. tostring(compassNeeded));
+    print("showDirectionInfo " .. tostring(showDirectionInfo));
+    print("showKeyId " .. tostring(showKeyId));
+
+    md.KSMItem = item;
+
+    if showDirectionInfo or showKeyId then
+        self.Text = {}
+        self.TextVal = {}
+        -- Store the item for use in the vector drawing
+    end
 
     -- If a compass is needed and the player doesn't have one, do nothing
-    if compassNeeded and not hasCompass(playerObj) then
-        return false
+    local isHaveTextToShow = false;
+
+    if compassNeeded and not KCMLib.hasCompass(playerObj) then
+        if showDirectionInfo then
+            self.Text = { "I need compass to see direction" }
+            self.TextVal = { "" }
+            showDirectionInfo = false
+            isHaveTextToShow = true;
+        end
     end
 
-    -- Calculate the difference in coordinates between the player and the key's origin
-    diff.X = item:getOriginX() - playerObj:getX()
-    diff.Y = item:getOriginY() - playerObj:getY()
-    diff.Z = item:getOriginZ() - playerObj:getZ()
-    diff.mod = math.sqrt(diff.X * diff.X + diff.Y * diff.Y)
+    if showDirectionInfo then
+        -- Calculate the difference in coordinates between the player and the key's origin
+        diff.X = item:getOriginX() - playerObj:getX()
+        diff.Y = item:getOriginY() - playerObj:getY()
+        diff.Z = item:getOriginZ() - playerObj:getZ()
+        diff.mod = math.sqrt(diff.X * diff.X + diff.Y * diff.Y)
 
-    -- Safety guard: avoid division by zero if origin equals player position
-    if diff.mod == 0 then
-        return false
+        -- Safety guard: avoid division by zero if origin equals player position
+        if diff.mod == 0 then
+            return false
+        end
+
+        -- Use atan2 so axis-aligned keys don't produce invalid divisions.
+        diff.argRad = math.atan2(diff.X, -diff.Y)
+        diff.arg = diff.argRad * 57.2958 -- Convert radians to degrees
+
+        -- Determine the cardinal direction of the key's origin
+        if diff.arg < -157.5 then
+            diff.dir = "S"
+        elseif diff.arg < -112.5 then
+            diff.dir = "SW"
+        elseif diff.arg < -67.5 then
+            diff.dir = "W"
+        elseif diff.arg < -22.5 then
+            diff.dir = "NW"
+        elseif diff.arg < 22.5 then
+            diff.dir = "N"
+        elseif diff.arg < 67.5 then
+            diff.dir = "NE"
+        elseif diff.arg < 112.5 then
+            diff.dir = "E"
+        elseif diff.arg < 157.5 then
+            diff.dir = "SE"
+        else
+            diff.dir = "S"
+        end
+
+        -- Prepare the text to display in the tooltip
+        self.Text = {
+            getText("IGUI_KCM_XYZ") .. ":",
+            getText("IGUI_KCM_Distance") .. ":",
+            getText("IGUI_KCM_Direction") .. ":",
+        }
+
+        -- Prepare the values that will accompany each label in the tooltip
+        self.TextVal = {
+            string.format("%d, %d, %d", self:_round(diff.X, 0), self:_round(diff.Y, 0), self:_round(diff.Z, 0)),
+            tostring(self:_round(diff.mod, 0)),
+            string.format("%d (%s)", self:_round(diff.arg, 0), diff.dir)
+        }
+
+        isHaveTextToShow = true;
     end
 
-    -- Use atan2 so axis-aligned keys don't produce invalid divisions.
-    diff.argRad = math.atan2(diff.X, -diff.Y)
-    diff.arg = diff.argRad * 57.2958  -- Convert radians to degrees
+    if showKeyId then
+        local keyId = tostring(item:getKeyId())
+        if self.Text ~= nil and #self.Text > 0 then
+            table.insert(self.Text, " Id")
+        else
+            self.Text = {
+                " Id",
+            }
+        end
 
-    -- Determine the cardinal direction of the key's origin
-    if diff.arg < -157.5 then diff.dir = "S"
-    elseif diff.arg < -112.5 then diff.dir = "SW"
-    elseif diff.arg < -67.5 then diff.dir = "W"
-    elseif diff.arg < -22.5 then diff.dir = "NW"
-    elseif diff.arg < 22.5 then diff.dir = "N"
-    elseif diff.arg < 67.5 then diff.dir = "NE"
-    elseif diff.arg < 112.5 then diff.dir = "E"
-    elseif diff.arg < 157.5 then diff.dir = "SE"
-    else diff.dir = "S" end
+        if self.TextVal ~= nil and #self.TextVal > 0 then
+            table.insert(self.TextVal, keyId)
+        else
+            self.TextVal = {
+                keyId,
+            }
+        end
 
-    -- Store the item for use in the vector drawing
-    md.SKOItem = item
+        isHaveTextToShow = true;
+    end
 
-    -- Prepare the text to display in the tooltip
-    self.Text = {
-        getText("IGUI_SKO_XYZ") .. ":",
-        getText("IGUI_SKO_Distance") .. ":",
-        getText("IGUI_SKO_Direction") .. ":"
-    }
-
-    -- Prepare the values that will accompany each label in the tooltip
-    self.TextVal = {
-        string.format("%d, %d, %d", self:_round(diff.X, 0), self:_round(diff.Y, 0), self:_round(diff.Z, 0)),
-        tostring(self:_round(diff.mod, 0)),
-        string.format("%d (%s)", self:_round(diff.arg, 0), diff.dir)
-    }
-
-    return true
+    return isHaveTextToShow
 end
 
 -- Store the previous version of the render function (vanilla or from another mod)
-if SKO_prev_render == nil then
-    SKO_prev_render = ISToolTipInv.render
+if KCM_prev_render == nil then
+    KCM_prev_render = ISToolTipInv.render
 end
 
 function ISToolTipInv:render(...)
     -- If the item has no origin info, just call the previous render function
     if not self.item or not keyInfo:initStats(self.item) then
-        return SKO_prev_render(self, ...)
+        return KCM_prev_render(self, ...)
     end
 
     -- Setup tooltip display parameters
@@ -195,7 +222,7 @@ function ISToolTipInv:render(...)
     end
 
     -- Call the previous render function to preserve base or other mod content
-    SKO_prev_render(self, ...)
+    KCM_prev_render(self, ...)
 
     -- Restore original methods to avoid affecting other tooltips
     self.setHeight = orig_setHeight

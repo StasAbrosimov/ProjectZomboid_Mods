@@ -1,5 +1,0 @@
-Sandbox_ES = {
-    Sandbox_ShowKeyOrigin = "Show Key Origin",
-    Sandbox_ShowKeyOrigin_CompassNeeded = "Se necesita brújula para ver el origen de llaves",
-	Sandbox_ShowKeyOrigin_CompassNeeded_tooltip = "Cuando está habilitado, el origen de las llaves solo se mostrará si tienes una brújula en tu inventario.",
-}

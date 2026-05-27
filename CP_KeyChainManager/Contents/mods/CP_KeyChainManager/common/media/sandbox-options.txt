@@ -1,9 +1,9 @@
 VERSION = 1,
 
-option ShowKeyOrigin.CompassNeeded
+option KeyChainManager.CompassNeeded
 {
     type = boolean,
     default = false,
-    page = ShowKeyOrigin,
-    translation = ShowKeyOrigin_CompassNeeded,
+    page = KeyChainManager,
+    translation = KeyChainManager_CompassNeeded,
 }

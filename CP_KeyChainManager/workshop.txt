@@ -1,6 +1,6 @@
 version=1
 id=
-title=KeyChainManager
+title=Key Chain Manager
 description=For build 42.15+
 description=This mod fix translations files (add new translation files format) for mod DrawOnMap by Notloc.
 description=Support languages: AR, CH, EN, ES, IT, KO, PL, PTBR, RU, TL, TR, UA 

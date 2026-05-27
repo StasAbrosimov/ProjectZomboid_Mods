@@ -1,38 +1,10 @@
--- SKO_ShowKeyDirection.lua
+-- KSM_ShowKeyDirection.lua
 
 require 'luautils'
 
--- Helper: Checks if the player has a compass in their inventory.
--- Uses ItemTag.COMPASS on newer B42 builds and falls back to the item type
--- so the sandbox option stays compatible across older variants.
-local function hasCompass(playerObj)
-    local inv = playerObj and playerObj:getInventory()
-    if not inv then
-        return false
-    end
+local KCMLib = require("KCMLib")
 
-    if ItemTag and ItemTag.COMPASS then
-        local ok, hasTag = pcall(function()
-            return inv:containsTagRecurse(ItemTag.COMPASS)
-        end)
-        if ok then
-            return hasTag
-        end
-    end
-
-    if inv.containsTypeRecurse then
-        local ok, hasType = pcall(function()
-            return inv:containsTypeRecurse("Base.CompassDirectional")
-        end)
-        if ok then
-            return hasType
-        end
-    end
-
-    return false
-end
-
--- UI element that renders a directional line toward the key origin
+--- UI element that renders a directional line toward the key origin
 ShowKeyDirection = ISUIElement:derive("ShowKeyDirection")
 
 -- Initializes base UI element
@@ -40,7 +12,6 @@ function ShowKeyDirection:initialize()
     ISUIElement.initialise(self)
 end
 
--- Coordinates and settings
 local pos = {}
 local diff = {}
 local r, g, b, alpha = 1, 1, 0, 1 -- Vector color (yellow)
@@ -51,13 +22,22 @@ function ShowKeyDirection:render()
     local md = self.playerObj:getModData()
     if not md then return end
 
-    SandboxVars.ShowKeyOrigin = SandboxVars.ShowKeyOrigin or {}
-    local compassNeeded = SandboxVars.ShowKeyOrigin.CompassNeeded
+    local sandBoxV = SandboxVars.KeyChainManager or {}
+    local compassNeeded = sandBoxV.CompassNeeded
 
-    if not (md.SKOItem and md.ShowKeyVector) then return end
-    if compassNeeded and not hasCompass(self.playerObj) then return end
+    if not (md.KSMItem and md.ShowKeyVector) then return end
+    if compassNeeded and not KCMLib.hasCompass(self.playerObj) then
+        if md.ShowKeyVector then
+            self.playerObj:Say("I need a compass...")
+        end
 
-    local item = md.SKOItem
+        md.KSMItem = nil;
+        md.ShowKeyVector = false;
+
+        return
+    end
+
+    local item = md.KSMItem
     if not item or type(item.hasOrigin) ~= "function" or not item:hasOrigin() then return end
     if type(item.getOriginX) ~= "function" or type(item.getOriginY) ~= "function" or type(item.getOriginZ) ~= "function" then return end
 
