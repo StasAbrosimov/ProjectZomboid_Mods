@@ -1,0 +1,9 @@
+VERSION = 1,
+
+option ShowKeyOrigin.CompassNeeded
+{
+    type = boolean,
+    default = false,
+    page = ShowKeyOrigin,
+    translation = ShowKeyOrigin_CompassNeeded,
+}

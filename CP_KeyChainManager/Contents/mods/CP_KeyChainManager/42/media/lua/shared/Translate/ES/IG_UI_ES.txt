@@ -1,0 +1,5 @@
+IGUI_ES = {
+	IGUI_SKO_XYZ = "X, Y, Z",
+	IGUI_SKO_Distance = "Distancia",
+	IGUI_SKO_Direction = "Dirección",
+}
