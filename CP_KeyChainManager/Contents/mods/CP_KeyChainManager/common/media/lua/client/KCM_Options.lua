@@ -27,6 +27,7 @@ local KCMConfing = {
 
     Errors = {
         IsDrowningErrorOccurred = false,
+        Is_NO_Luautils_mod_Found = false,
         IsInternalDrowningError = false,
         IsLuautilsDrowningError = false,
         IsVanillaDrowningError = false,
@@ -36,16 +37,39 @@ local KCMConfing = {
     Debug = {
         --- Is exclude cars from direction calculation
         --- @type boolean
-        isDebugSendBox = false
+        isDebugSendBox = false,
+
+        isPrintOnDrawDebug = false,
+
+        PrintErrorsOnTick = false,
     }
 }
 
-function KCMConfing.Errors:isAnyError()
+
+function KCMConfing.Debug:PrintMessageOn(...)
+    if KCMConfing.Debug:IsDebugEnabled() then
+        local args = { ... }
+        local message = ""
+        for i = 1, #args do
+            message = message .. tostring(args[i]);
+        end
+        print(message)
+    end
+end
+
+function KCMConfing.Debug:PrintMessageOnDrawCall(...)
+    if KCMConfing.Debug.isPrintOnDrawDebug then
+        KCMConfing.Debug:PrintMessageOn(...)
+    end
+end
+
+function KCMConfing.Debug:isAnyError()
     return KCMConfing.Errors.IsAllDrowningTypesFailed or
         KCMConfing.Errors.IsDrowningErrorOccurred or
         KCMConfing.Errors.IsInternalDrowningError or
         KCMConfing.Errors.IsLuautilsDrowningError or
-        KCMConfing.Errors.IsVanillaDrowningError;
+        KCMConfing.Errors.IsVanillaDrowningError or
+        KCMConfing.Errors.Is_NO_Luautils_mod_Found;
 end
 
 KCMConfing.Errors.ResetErrorFlags = function()
@@ -54,7 +78,33 @@ KCMConfing.Errors.ResetErrorFlags = function()
     KCMConfing.Errors.IsInternalDrowningError = false
     KCMConfing.Errors.IsLuautilsDrowningError = false
     KCMConfing.Errors.IsVanillaDrowningError = false
-    KCMConfing.Errors:UpdateErrorFlags(true)
+    KCMConfing.Errors.Is_NO_Luautils_mod_Found = false;
+    KCMConfing.Errors:UpdateErrorFlags()
+end
+
+KCMConfing.Debug.UpdateErrorDuringTime = function()
+    if KCMConfing.Debug:isAnyError() then
+        KCMConfing.Errors:UpdateErrorFlags()
+    end
+
+    if luautils.drawLine2 then
+        KCMConfing.Errors.Is_NO_Luautils_mod_Found = false
+    else
+        KCMConfing.Errors.Is_NO_Luautils_mod_Found = true
+    end
+
+    if KCMConfing.Debug.PrintErrorsOnTick then
+        KCMConfing.Errors:PrintAllErrors();
+    end
+end
+
+function KCMConfing.Errors:PrintAllErrors()
+    print("KCMConfing.Errors.IsAllDrowningTypesFailed :" .. tostring(KCMConfing.Errors.IsAllDrowningTypesFailed))
+    print("KCMConfing.Errors.IsDrowningErrorOccurred :" .. tostring(KCMConfing.Errors.IsDrowningErrorOccurred))
+    print("KCMConfing.Errors.IsInternalDrowningError :" .. tostring(KCMConfing.Errors.IsInternalDrowningError))
+    print("KCMConfing.Errors.IsLuautilsDrowningError :" .. tostring(KCMConfing.Errors.IsLuautilsDrowningError))
+    print("KCMConfing.Errors.IsVanillaDrowningError :" .. tostring(KCMConfing.Errors.IsVanillaDrowningError))
+    print("KCMConfing.Errors.Is_NO_Luautils_mod_Found :" .. tostring(KCMConfing.Errors.Is_NO_Luautils_mod_Found))
 end
 
 KCMConfing.Errors.ApplyErrorFlags = function()
@@ -63,120 +113,70 @@ KCMConfing.Errors.ApplyErrorFlags = function()
     KCMConfing.Errors.IsInternalDrowningError = KCMConfing.modOptions.IsInternalDrowningError:getValue();
     KCMConfing.Errors.IsLuautilsDrowningError = KCMConfing.modOptions.IsLuautilsDrowningError:getValue();
     KCMConfing.Errors.IsVanillaDrowningError = KCMConfing.modOptions.IsVanillaDrowningError:getValue();
-    KCMConfing.Errors:UpdateErrorFlags(true)
+    KCMConfing.Errors.Is_NO_Luautils_mod_Found = KCMConfing.modOptions.Is_NO_Luautils_mod_Found:getValue();
 end
 
 function KCMConfing.Debug:IsDebugEnabled()
     return self.isDebugSendBox or isDebugEnabled()
 end
 
-KCMConfing.Errors.ShowErrorFlags = function()
-    KCMConfing.Errors:UpdateErrorFlags(true)
+function KCMConfing.Errors:UpdateErrorFlags()
+    KCMConfing.modOptions.IsAllDrowningTypesFailed:setValue(self.IsAllDrowningTypesFailed)
+
+    KCMConfing.modOptions.IsDrowningErrorOccurred:setValue(self.IsDrowningErrorOccurred)
+
+    KCMConfing.modOptions.IsInternalDrowningError:setValue(self.IsInternalDrowningError)
+
+    KCMConfing.modOptions.IsLuautilsDrowningError:setValue(self.IsLuautilsDrowningError)
+
+    KCMConfing.modOptions.IsVanillaDrowningError:setValue(self.IsVanillaDrowningError)
+
+    KCMConfing.modOptions.Is_NO_Luautils_mod_Found:setValue(self.Is_NO_Luautils_mod_Found);
 end
 
-function KCMConfing.Errors:UpdateErrorFlags(resetLua)
-    local function isIdInOptions(Id)
-        for index, value in ipairs(KCMConfing.Options.data) do
-            if value.id == Id then
-                return true;
-            end
-        end
-
-        return false;
-    end
-
-    local function deleteOptionById(Id)
-        for index, value in ipairs(KCMConfing.Options.data) do
-            if value.id == Id then
-                table.remove(KCMConfing.Options.data, index)
-                KCMConfing.Options.dict[Id] = nil;
-                return true;
-            end
-        end
-
-        return false;
-    end
-
-    deleteOptionById("CP_KCM_ResetErrors_Button")
-
-    local firstSeparatorIndex = -1
-    local separatorCount = 0
-    for index, value in ipairs(KCMConfing.Options.data) do
-        if value.type == "separator" then
-            if firstSeparatorIndex < 0 then
-                firstSeparatorIndex = index
-            end
-            separatorCount = separatorCount + 1
-        else
-            firstSeparatorIndex = -1
-            separatorCount = 0
-        end
-
-        if separatorCount >= 2 then
-            break
-        end
-    end
-
-    if firstSeparatorIndex > 0 then
-        local newDat = {}
-        local newDic = {}
-
-        for index, value in ipairs(KCMConfing.Options.data) do
-            if firstSeparatorIndex > index then
-                table.insert(newDat, value);
-                if value.id ~= nil then
-                    newDic[value.id] = value;
-                end
-            else
-                break
-            end
-        end
-    end
-
-
+function KCMConfing.Errors:CreateSettingsDebugRegion()
     -- ERRORS region
-    if KCMConfing.Errors:isAnyError() then
-        KCMConfing.Options:addSeparator()
-        KCMConfing.Options:addSeparator()
-        KCMConfing.Options:addDescription(
-            "If you're reading this, there's been an error. Below are the descriptions.")
 
-        if KCMConfing.Errors.IsDrowningErrorOccurred then
-            KCMConfing.Options:addDescription(" ");
-            KCMConfing.Options:addDescription("One or more line drawing methods do not work.")
-        end
+    KCMConfing.Options:addSeparator()
+    KCMConfing.Options:addSeparator()
+    KCMConfing.Options:addDescription(
+        "Debug region show only if in debug mode or sandbox flag enabled")
 
-        if KCMConfing.Errors.IsInternalDrowningError then
-            KCMConfing.Options:addDescription(" ");
-            KCMConfing.Options:addDescription("Internal rendering method does not work, try using TchernoLib mode.")
-        end
-
-        if KCMConfing.Errors.IsLuautilsDrowningError then
-            KCMConfing.Options:addDescription(" ");
-            KCMConfing.Options:addDescription(
-                "TchernoLib rendering method does not work, trying to use Vanila line render");
-        end
-
-        if KCMConfing.Errors.IsVanillaDrowningError then
-            KCMConfing.Options:addDescription(" ");
-            KCMConfing.Options:addDescription(
-                "Vanila rendering method does not work. Oops... sorry... Waiting for mode updates");
-        end
+    KCMConfing.Options:addDescription(
+        "If error is occurred the checkbox will be enabled")
 
 
-        KCMConfing.Options:addDescription(" ");
-        KCMConfing.modOptions.resetErrors = KCMConfing.Options:addButton("CP_KCM_ResetErrors_Button", "Reset Errors",
-            "Reset all errors flags", KCMConfing.Errors.ResetErrorFlags)
-    else
-        KCMConfing.Options:addSeparator()
-        KCMConfing.Options:addSeparator()
-        KCMConfing.Options:addDescription(
-            "There are NO errors")
-    end
+    KCMConfing.modOptions.IsAllDrowningTypesFailed = KCMConfing.Options:addTickBox(
+        "CP_KCM_DEBUG_IsAllDrowningTypesFailed", "IsAllDrowningTypesFailed", false,
+        "CP_KCM_DEBUG_IsAllDrowningTypesFailed");
 
-    if resetLua then
-        MainOptions.instance.resetLua = true;
-    end
+    KCMConfing.modOptions.IsDrowningErrorOccurred = KCMConfing.Options:addTickBox("CP_KCM_DEBUG_IsDrowningErrorOccurred",
+        "IsDrowningErrorOccurred", false, "IsDrowningErrorOccurred");
+
+    KCMConfing.modOptions.IsInternalDrowningError = KCMConfing.Options:addTickBox("CP_KCM_DEBUG_IsInternalDrowningError",
+        "IsInternalDrowningError", false, "IsInternalDrowningError");
+
+    KCMConfing.modOptions.IsLuautilsDrowningError = KCMConfing.Options:addTickBox("CP_KCM_DEBUG_IsLuautilsDrowningError",
+        "IsLuautilsDrowningError", false, "IsLuautilsDrowningError");
+
+    KCMConfing.modOptions.IsVanillaDrowningError = KCMConfing.Options:addTickBox("CP_KCM_DEBUG_IsVanillaDrowningError",
+        "IsVanillaDrowningError", false, "IsVanillaDrowningError");
+
+    KCMConfing.modOptions.Is_NO_Luautils_mod_Found = KCMConfing.Options:addTickBox(
+        "CP_KCM_DEBUG_Is_NO_Luautils_mod_Found",
+        "Is_NO_Luautils_mod_Found", false, "Is_NO_Luautils_mod_Found");
+
+    KCMConfing.modOptions.ResetErrorsButton = KCMConfing.Options:addButton("CP_KCM_DEBUG_ResetErrors",
+        "Reset errors", "Reset displayed errors for code and this page", KCMConfing.Errors.ResetErrorFlags);
+    KCMConfing.modOptions.ResetErrorsButton = KCMConfing.Options:addButton("CP_KCM_DEBUG_SetErrorsForCode",
+        "Set Errors for code", "Set errors from combo box to code", KCMConfing.Errors.ApplyErrorFlags);
+
+
+    KCMConfing.modOptions.IsPrintDebugDrawCalls = KCMConfing.Options:addTickBox("CP_KCM_DEBUG_IsPrintDebugDrawCalls",
+        "IsPrintDebugDrawCalls", false, "IsPrintDebugDrawCalls for key origin vector");
+
+    KCMConfing.modOptions.PrintErrorsOnTick = KCMConfing.Options:addTickBox("CP_KCM_DEBUG_PrintErrorsOnTick",
+        "PrintErrorsOnTick", false, "PrintErrorsOnTick");
 end
 
 KCMConfing.initOptions = function()
@@ -206,7 +206,7 @@ KCMConfing.initOptions = function()
 
     KCMConfing.modOptions.LineThicknessSlider = Options:addSlider("CP_KCM_Drawing_Line_Thickness",
         getText("IGUI_CP_KCM_Options_Drawing_Line_Thickness"),
-        1.0, 32.0, 1.0, 2.0,
+        1.0, 20.0, 1.0, 2.0,
         getText("IGUI_CP_KCM_Options_Drawing_Line_Thickness_tooltip"));
 
     KCMConfing.modOptions.LineThicknessSliderTooltip = Options:addDescription(getText(
@@ -214,7 +214,16 @@ KCMConfing.initOptions = function()
 
     KCMConfing.Debug.isDebugSendBox = isDebugEnabled();
 
+    local sandBoxV = SandboxVars.KeyChainManager or {}
+    KCMConfing.CompassNeeded = sandBoxV.CompassNeeded or false;
 
+    if not isDebugEnabled() then
+        KCMConfing.Debug.isDebugSendBox = sandBoxV.IsDebugSendBox or false;
+    end
+
+    if KCMConfing.Debug.isDebugSendBox then
+        KCMConfing.Errors:CreateSettingsDebugRegion()
+    end
 
     Options.apply = function()
         KCMConfing.ShowDirectionInItem = KCMConfing.modOptions.ShowDirectionInItem:getValue();
@@ -222,19 +231,20 @@ KCMConfing.initOptions = function()
         KCMConfing.LineColor = KCMConfing.modOptions.LineColorPiker:getValue();
         KCMConfing.LineThickness = KCMConfing.modOptions.LineThicknessSlider:getValue();
 
-        local sandBoxV = SandboxVars.KeyChainManager or {}
-        KCMConfing.CompassNeeded = sandBoxV.CompassNeeded or false;
-
-        if isDebugSendBox() then
+        if KCMConfing.Debug.isDebugSendBox then
+            local sandBoxV = SandboxVars.KeyChainManager or {}
             print("KCM in debug mode, ignore sendbox settings")
-
             print("KCM sendbox debug settings: " .. tostring(sandBoxV.IsDebugSendBox or false));
-        else
-            KCMConfing.Debug.isDebugSendBox = sandBoxV.IsDebugSendBox or false;
+
+            KCMConfing.Debug.isPrintOnDrawDebug = KCMConfing.modOptions.IsPrintDebugDrawCalls:getValue();
+            KCMConfing.Debug.PrintErrorsOnTick = KCMConfing.modOptions.PrintErrorsOnTick:getValue();
         end
     end
 
     Events.OnGameStart.Add(Options.apply)
+    if KCMConfing.Debug:IsDebugEnabled() then
+        Events.EveryOneMinute.Add(KCMConfing.Debug.UpdateErrorDuringTime)
+    end
 end
 
 

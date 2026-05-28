@@ -107,6 +107,8 @@ function ShowKeyDirection:safeDraw(xScreen1, yScreen1, xScreen2, yScreen2, color
             KCMConfing.Errors.IsLuautilsDrowningErrorTest = true;
         end
 
+        KCMConfing.Debug:PrintMessageOnDrawCall("KCM luautils.drawLine2: ",
+            tostring(KCMConfing.Errors.IsLuautilsDrowningError))
         luautils.drawLine2(xScreen1, yScreen1, xScreen2, yScreen2, color.a, color.r, color.g, color.b, arg, t)
 
         if KCMConfing.Errors.IsDrowningErrorOccurred then
@@ -117,16 +119,20 @@ function ShowKeyDirection:safeDraw(xScreen1, yScreen1, xScreen2, yScreen2, color
             KCMConfing.Errors.IsInternalDrowningErrorTest = true;
         end
 
+        KCMConfing.Debug:PrintMessageOnDrawCall("KCM self:drawLine2_Internal: ",
+            tostring(KCMConfing.Errors.IsInternalDrowningError))
         self:drawLine2Int(xScreen1, yScreen1, xScreen2, yScreen2, color.a, color.r, color.g, color.b, arg, t)
 
         if KCMConfing.Errors.IsDrowningErrorOccurred then
             KCMConfing.Errors.IsInternalDrowningErrorTest = false;
         end
-    elseif not KCMConfing.Errors.IsInternalDrowningError then
+    elseif not KCMConfing.Errors.IsVanillaDrowningError then
         if KCMConfing.Errors.IsDrowningErrorOccurred then
             KCMConfing.Errors.IsVanillaDrowningErrorTest = true;
         end
 
+        KCMConfing.Debug:PrintMessageOnDrawCall("KCM self:drawLine2_Vanila: ",
+            tostring(KCMConfing.Errors.IsVanillaDrowningError))
         self:drawLine2(xScreen1, yScreen1, xScreen2, yScreen2, color.a, color.r, color.g, color.b)
 
         if KCMConfing.Errors.IsDrowningErrorOccurred then
@@ -134,6 +140,8 @@ function ShowKeyDirection:safeDraw(xScreen1, yScreen1, xScreen2, yScreen2, color
         end
     else
         KCMConfing.Errors.IsAllDrowningTypesFailed = true;
+        KCMConfing.Debug:PrintMessageOnDrawCall("KCM DRAW ALL ERROR",
+            tostring(KCMConfing.Errors.IsAllDrowningTypesFailed))
     end
 end
 
