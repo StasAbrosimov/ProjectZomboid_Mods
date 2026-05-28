@@ -7,3 +7,11 @@ option KeyChainManager.CompassNeeded
     page = KeyChainManager,
     translation = KeyChainManager_CompassNeeded,
 }
+
+option KeyChainManager.IsDebugSendBox
+{
+    type = boolean,
+    default = false,
+    page = KeyChainManager,
+    translation = KeyChainManager_IsDebugSendBox,
+}

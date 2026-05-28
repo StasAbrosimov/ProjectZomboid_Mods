@@ -1,4 +1,5 @@
 {
-    "ContextMenu_KCM_Hide": "Hide Key Origin Vector",
-    "ContextMenu_KCM_Show": "Show Key Origin Vector"
+    "ContextMenu_KCM_Origin_Hide": "Hide Key Origin Vector",
+    "ContextMenu_KCM_Origin_Show": "Show Key Origin Vector",
+    "ContextMenu_KCM_Unpack_Duplicates": "Unpack all duplicates"
 }

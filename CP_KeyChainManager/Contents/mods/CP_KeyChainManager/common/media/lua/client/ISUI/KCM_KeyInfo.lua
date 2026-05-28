@@ -131,10 +131,10 @@ function keyInfo:initStats(item)
     if showKeyId then
         local keyId = tostring(item:getKeyId())
         if self.Text ~= nil and #self.Text > 0 then
-            table.insert(self.Text, " Id")
+            table.insert(self.Text, getText("IGUI_KCM_Id") .. ":")
         else
             self.Text = {
-                " Id",
+                getText("IGUI_KCM_Id") .. ":",
             }
         end
 

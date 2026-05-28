@@ -61,17 +61,21 @@ local function KCM_ContextMenu_toggleShowKeyVector(player, context, items)
     -- Only proceed if there's exactly one key with origin
     if #validKeys == 1 then
         local show = KCM_ContextMenu.isShowKeyVector(playerObj)
-        local optionText = show and getText("ContextMenu_KCM_Hide") or getText("ContextMenu_KCM_Show")
-        local option = context:addOption(optionText, validKeys[1], KCM_ContextMenu.changeShowKeyVector, player)
+        local optionText = show and getText("ContextMenu_KCM_Origin_Hide") or getText("ContextMenu_KCM_Origin_Show")
+        local showOriginOption = context:addOption(optionText, validKeys[1], KCM_ContextMenu.changeShowKeyVector, player)
 
         local tooltip = ISInventoryPaneContextMenu.addToolTip()
-        tooltip.description = getText("Tooltip_KCM_Toggle")
-        option.toolTip = tooltip
+        tooltip.description = getText("Tooltip_KCM_CM_Origin_Toggle");
+        showOriginOption.toolTip = tooltip
 
-        context:setOptionChecked(option, show)
+        context:setOptionChecked(showOriginOption, show)
 
-        local option = context:addOption("Unpack all duplicates into user inventory", validKeys[1],
-            KCM_ContextMenu.putDuplicatesIntoContainer, player)
+        local unpackOption = context:addOption("Unpack all duplicates into user inventory", validKeys[1],
+            KCM_ContextMenu.putDuplicatesIntoContainer, player);
+
+        local unpackTooltip = ISInventoryPaneContextMenu.addToolTip();
+        unpackTooltip.description = getText("Tooltip_KCM_CM_Unpack_Duplicates");
+        unpackOption.toolTip = unpackTooltip
     end
 end
 

@@ -76,12 +76,64 @@ function ShowKeyDirection:render()
     -- Draw line (use Tchernolib if available for advanced styling)
     lineColor = KCMConfing.LineColor;
     thickness = KCMConfing.LineThickness
-    if luautils.drawLine2 then
-        luautils.drawLine2(xScreen1, yScreen1, xScreen2, yScreen2, lineColor.a, lineColor.r, lineColor.g, lineColor.b,
-            arg, thickness)
+
+    local isOk, dr = pcall(function()
+        return self:safeDraw(xScreen1, yScreen1, xScreen2, yScreen2, lineColor, arg, thickness)
+    end);
+
+    if not isOk then
+        KCMConfing.Errors.IsDrowningErrorOccurred = true;
+
+        if KCMConfing.Errors.IsLuautilsDrowningErrorTest then
+            KCMConfing.Errors.IsLuautilsDrowningError = true
+            KCMConfing.Errors.IsLuautilsDrowningErrorTest = false
+        end
+
+        if KCMConfing.Errors.IsInternalDrowningErrorTest then
+            KCMConfing.Errors.IsInternalDrowningError = true
+            KCMConfing.Errors.IsInternalDrowningErrorTest = false
+        end
+
+        if KCMConfing.Errors.IsVanillaDrowningErrorTest then
+            KCMConfing.Errors.IsVanillaDrowningError = true
+            KCMConfing.Errors.IsVanillaDrowningErrorTest = false
+        end
+    end
+end
+
+function ShowKeyDirection:safeDraw(xScreen1, yScreen1, xScreen2, yScreen2, color, arg, t)
+    if luautils.drawLine2 and not KCMConfing.Errors.IsLuautilsDrowningError then
+        if KCMConfing.Errors.IsDrowningErrorOccurred then
+            KCMConfing.Errors.IsLuautilsDrowningErrorTest = true;
+        end
+
+        luautils.drawLine2(xScreen1, yScreen1, xScreen2, yScreen2, color.a, color.r, color.g, color.b, arg, t)
+
+        if KCMConfing.Errors.IsDrowningErrorOccurred then
+            KCMConfing.Errors.IsLuautilsDrowningErrorTest = false;
+        end
+    elseif not KCMConfing.Errors.IsInternalDrowningError then
+        if KCMConfing.Errors.IsDrowningErrorOccurred then
+            KCMConfing.Errors.IsInternalDrowningErrorTest = true;
+        end
+
+        self:drawLine2Int(xScreen1, yScreen1, xScreen2, yScreen2, color.a, color.r, color.g, color.b, arg, t)
+
+        if KCMConfing.Errors.IsDrowningErrorOccurred then
+            KCMConfing.Errors.IsInternalDrowningErrorTest = false;
+        end
+    elseif not KCMConfing.Errors.IsInternalDrowningError then
+        if KCMConfing.Errors.IsDrowningErrorOccurred then
+            KCMConfing.Errors.IsVanillaDrowningErrorTest = true;
+        end
+
+        self:drawLine2(xScreen1, yScreen1, xScreen2, yScreen2, color.a, color.r, color.g, color.b)
+
+        if KCMConfing.Errors.IsDrowningErrorOccurred then
+            KCMConfing.Errors.IsVanillaDrowningErrorTest = false;
+        end
     else
-        self:drawLine2Int(xScreen1, yScreen1, xScreen2, yScreen2, lineColor.a, lineColor.r, lineColor.g, lineColor.b, arg,
-            thickness)
+        KCMConfing.Errors.IsAllDrowningTypesFailed = true;
     end
 end
 

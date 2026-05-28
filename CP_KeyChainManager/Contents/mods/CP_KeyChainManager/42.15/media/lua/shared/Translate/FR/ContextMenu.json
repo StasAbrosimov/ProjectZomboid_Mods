@@ -1,4 +1,4 @@
 {
-    "ContextMenu_KCM_Hide": "Masquer le vecteur source des clés",
-    "ContextMenu_KCM_Show": "Afficher le vecteur source des clés"
+    "ContextMenu_KCM_Origin_Hide": "Masquer le vecteur source des clés",
+    "ContextMenu_KCM_Origin_Show": "Afficher le vecteur source des clés"
 }

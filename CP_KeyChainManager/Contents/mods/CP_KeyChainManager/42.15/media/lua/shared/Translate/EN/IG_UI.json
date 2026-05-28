@@ -1,5 +1,6 @@
 {
-    "IGUI_KCM_XYZ": "X, Y, Z",
-    "IGUI_KCM_Distance": "Distance",
-    "IGUI_KCM_Direction": "Direction"
+    "IGUI_KCM_XYZ": " X, Y, Z",
+    "IGUI_KCM_Distance": " Distance",
+    "IGUI_KCM_Direction": " Direction",
+    "IGUI_KCM_Id": " Id"
 }

@@ -1,4 +1,4 @@
 {
-    "ContextMenu_KCM_Hide": "Ocultar vector de origen de llaves",
-    "ContextMenu_KCM_Show": "Mostrar vector de origen de llaves"
+    "ContextMenu_KCM_Origin_Hide": "Ocultar vector de origen de llaves",
+    "ContextMenu_KCM_Origin_Show": "Mostrar vector de origen de llaves"
 }
