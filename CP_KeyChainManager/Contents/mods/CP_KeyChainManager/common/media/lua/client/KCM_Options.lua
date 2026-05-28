@@ -17,9 +17,31 @@ local KCMConfing = {
     --- @type number
     LineThickness = 2.0,
 
-    --- Is compass needed to calculate direction
-    --- @type boolean
-    CompassNeeded = true,
+    SandboxVars = {
+        --- Is compass needed to calculate direction
+        --- @type boolean
+        CompassNeeded = true,
+
+        --- What skill level needed for provide additional data, default 1
+        --- @type integer
+        ForagingLevelForDirection = 1,
+
+        --- What skill level needed for provide additional data, default 2
+        --- @type integer
+        ForagingLevelForDistance = 2,
+
+        --- What skill level needed for provide additional data, default 3
+        --- @type integer
+        ForagingLevelForCoordinates = 3,
+
+        --- Base amount of minutes that direction will be visible , default 5 minutes
+        --- @type number
+        BaseTimeDirectionVisible = 5.0,
+
+        --- Percentage modificator that add value to base time. Based on Foraging skill level, defaults 10
+        ByForagingLevelTimeDirectionVisibleModificator = 10.0
+
+    },
 
     --- Is exclude cars from direction calculation
     --- @type boolean
@@ -148,18 +170,22 @@ function KCMConfing.Errors:CreateSettingsDebugRegion()
 
     KCMConfing.modOptions.IsAllDrowningTypesFailed = KCMConfing.Options:addTickBox(
         "CP_KCM_DEBUG_IsAllDrowningTypesFailed", "IsAllDrowningTypesFailed", false,
-        "CP_KCM_DEBUG_IsAllDrowningTypesFailed");
+        "IsAllDrowningTypesFailed");
 
-    KCMConfing.modOptions.IsDrowningErrorOccurred = KCMConfing.Options:addTickBox("CP_KCM_DEBUG_IsDrowningErrorOccurred",
+    KCMConfing.modOptions.IsDrowningErrorOccurred = KCMConfing.Options:addTickBox(
+        "CP_KCM_DEBUG_IsDrowningErrorOccurred",
         "IsDrowningErrorOccurred", false, "IsDrowningErrorOccurred");
 
-    KCMConfing.modOptions.IsInternalDrowningError = KCMConfing.Options:addTickBox("CP_KCM_DEBUG_IsInternalDrowningError",
+    KCMConfing.modOptions.IsInternalDrowningError = KCMConfing.Options:addTickBox(
+        "CP_KCM_DEBUG_IsInternalDrowningError",
         "IsInternalDrowningError", false, "IsInternalDrowningError");
 
-    KCMConfing.modOptions.IsLuautilsDrowningError = KCMConfing.Options:addTickBox("CP_KCM_DEBUG_IsLuautilsDrowningError",
+    KCMConfing.modOptions.IsLuautilsDrowningError = KCMConfing.Options:addTickBox(
+        "CP_KCM_DEBUG_IsLuautilsDrowningError",
         "IsLuautilsDrowningError", false, "IsLuautilsDrowningError");
 
-    KCMConfing.modOptions.IsVanillaDrowningError = KCMConfing.Options:addTickBox("CP_KCM_DEBUG_IsVanillaDrowningError",
+    KCMConfing.modOptions.IsVanillaDrowningError = KCMConfing.Options:addTickBox(
+        "CP_KCM_DEBUG_IsVanillaDrowningError",
         "IsVanillaDrowningError", false, "IsVanillaDrowningError");
 
     KCMConfing.modOptions.Is_NO_Luautils_mod_Found = KCMConfing.Options:addTickBox(
@@ -172,7 +198,8 @@ function KCMConfing.Errors:CreateSettingsDebugRegion()
         "Set Errors for code", "Set errors from combo box to code", KCMConfing.Errors.ApplyErrorFlags);
 
 
-    KCMConfing.modOptions.IsPrintDebugDrawCalls = KCMConfing.Options:addTickBox("CP_KCM_DEBUG_IsPrintDebugDrawCalls",
+    KCMConfing.modOptions.IsPrintDebugDrawCalls = KCMConfing.Options:addTickBox(
+        "CP_KCM_DEBUG_IsPrintDebugDrawCalls",
         "IsPrintDebugDrawCalls", false, "IsPrintDebugDrawCalls for key origin vector");
 
     KCMConfing.modOptions.PrintErrorsOnTick = KCMConfing.Options:addTickBox("CP_KCM_DEBUG_PrintErrorsOnTick",
@@ -192,7 +219,7 @@ KCMConfing.initOptions = function()
 
     KCMConfing.modOptions.ShowKeyId = Options:addTickBox("CP_KCM_ShowKeyID",
         getText("IGUI_CP_KCM_Options_ShowKeyID"),
-        true,
+        false,
         getText("IGUI_CP_KCM_Options_ShowKeyID_tooltip"));
 
     Options:addSeparator()
@@ -214,8 +241,22 @@ KCMConfing.initOptions = function()
 
     KCMConfing.Debug.isDebugSendBox = isDebugEnabled();
 
+    -- sandbox options init
     local sandBoxV = SandboxVars.KeyChainManager or {}
-    KCMConfing.CompassNeeded = sandBoxV.CompassNeeded or false;
+
+    KCMConfing.SandboxVars.CompassNeeded = sandBoxV.CompassNeeded or true; -- default true
+    KCMConfing.SandboxVars.ForagingLevelForDirection = sandBoxV.ForagingLevelForDirection or
+        1                                                                  -- default 1
+    KCMConfing.SandboxVars.ForagingLevelForDistance = sandBoxV.ForagingLevelForDistance or
+        2                                                                  -- default 2
+    KCMConfing.SandboxVars.ForagingLevelForCoordinates = sandBoxV.ForagingLevelForCoordinates or
+        3                                                                  -- default 3
+
+    KCMConfing.SandboxVars.BaseTimeDirectionVisible = sandBoxV.BaseTimeDirectionVisible or
+        5.0 -- default 5.0
+    KCMConfing.SandboxVars.ByForagingLevelTimeDirectionVisibleModificator = sandBoxV
+        .ByForagingLevelTimeDirectionVisibleModificator or
+        10.0 -- default 10.0
 
     if not isDebugEnabled() then
         KCMConfing.Debug.isDebugSendBox = sandBoxV.IsDebugSendBox or false;

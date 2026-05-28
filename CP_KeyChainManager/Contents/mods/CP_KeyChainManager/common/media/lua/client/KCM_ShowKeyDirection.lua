@@ -24,22 +24,21 @@ function ShowKeyDirection:render()
     local md = self.playerObj:getModData()
     if not md then return end
 
-    local sandBoxV = SandboxVars.KeyChainManager or {}
-    local compassNeeded = sandBoxV.CompassNeeded
+    local compassNeeded = KCMConfing.CompassNeeded
 
-    if not (md.KSMItem and md.ShowKeyVector) then return end
+    if not (md.KCMItem and md.ShowKeyVector) then return end
     if compassNeeded and not KCMLib.hasCompass(self.playerObj) then
         if md.ShowKeyVector then
             self.playerObj:Say("I need a compass...")
         end
 
-        md.KSMItem = nil;
+        md.KCMItem = nil;
         md.ShowKeyVector = false;
 
         return
     end
 
-    local item = md.KSMItem
+    local item = md.KCMItem
     if not item or type(item.hasOrigin) ~= "function" or not item:hasOrigin() then return end
     if type(item.getOriginX) ~= "function" or type(item.getOriginY) ~= "function" or type(item.getOriginZ) ~= "function" then return end
 

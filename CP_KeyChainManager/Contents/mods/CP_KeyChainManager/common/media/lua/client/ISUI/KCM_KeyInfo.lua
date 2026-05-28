@@ -2,6 +2,7 @@ require "ISUI/ISToolTipInv"
 
 local KCMLib = require("KCMLib")
 local KCMConfing = require("KCM_Options");
+local KCMDataManager = require("KCM_ModDataManager");
 
 keyInfo = keyInfo or {}
 
@@ -49,12 +50,11 @@ function keyInfo:initStats(item)
     end
 
     -- Ensure the mod's configuration exists
-    local sandBoxV = SandboxVars.KeyChainManager or {}
-    local compassNeeded = sandBoxV.CompassNeeded
+    local compassNeeded = KCMConfing.CompassNeeded
     local showDirectionInfo = KCMConfing.ShowDirectionInItem
     local showKeyId = KCMConfing.ShowKeyId
 
-    md.KSMItem = item;
+    KCMDataManager:AddNewItemToDraw(item, playerObj, md);
 
     if showDirectionInfo or showKeyId then
         self.Text = {}
@@ -112,18 +112,40 @@ function keyInfo:initStats(item)
         end
 
         -- Prepare the text to display in the tooltip
-        self.Text = {
-            getText("IGUI_KCM_XYZ") .. ":",
-            getText("IGUI_KCM_Distance") .. ":",
-            getText("IGUI_KCM_Direction") .. ":",
-        }
 
-        -- Prepare the values that will accompany each label in the tooltip
-        self.TextVal = {
-            string.format("%d, %d, %d", self:_round(diff.X, 0), self:_round(diff.Y, 0), self:_round(diff.Z, 0)),
-            tostring(self:_round(diff.mod, 0)),
-            string.format("%d (%s)", self:_round(diff.arg, 0), diff.dir)
-        }
+        if KCMDataManager:CanShowCoordinatesTo(playerObj) then
+            table.insert(self.Text,
+                getText("IGUI_KCM_XYZ") .. ":")
+            table.insert(self.TextVal,
+                string.format("%d, %d, %d", self:_round(diff.X, 0), self:_round(diff.Y, 0), self:_round(diff.Z, 0)))
+        end
+
+        if KCMDataManager:CanShowDistanceTo(playerObj) then
+            table.insert(self.Text,
+                getText("IGUI_KCM_Distance") .. ":")
+            table.insert(self.TextVal,
+                tostring(self:_round(diff.mod, 0)))
+        end
+
+        if KCMDataManager:CanShowDirectionVectorTo(playerObj) then
+            table.insert(self.Text,
+                getText("IGUI_KCM_Direction") .. ":")
+            table.insert(self.TextVal,
+                string.format("%d (%s)", self:_round(diff.arg, 0), diff.dir))
+        end
+
+        -- self.Text = {
+        --     getText("IGUI_KCM_XYZ") .. ":",
+        --     getText("IGUI_KCM_Distance") .. ":",
+        --     getText("IGUI_KCM_Direction") .. ":",
+        -- }
+
+        -- -- Prepare the values that will accompany each label in the tooltip
+        -- self.TextVal = {
+        --     string.format("%d, %d, %d", self:_round(diff.X, 0), self:_round(diff.Y, 0), self:_round(diff.Z, 0)),
+        --     tostring(self:_round(diff.mod, 0)),
+        --     string.format("%d (%s)", self:_round(diff.arg, 0), diff.dir)
+        -- }
 
         isHaveTextToShow = true;
     end

@@ -1,6 +1,8 @@
 require "TimedActions/ISInventoryTransferUtil"
 -- KCM_ContextMenu.lua
 
+local KCMDataManager = require("KCM_ModDataManager");
+
 -- Table to hold all KCM context menu functions
 KCM_ContextMenu = KCM_ContextMenu or {}
 
@@ -60,16 +62,18 @@ local function KCM_ContextMenu_toggleShowKeyVector(player, context, items)
 
     -- Only proceed if there's exactly one key with origin
     if #validKeys == 1 then
-        local show = KCM_ContextMenu.isShowKeyVector(playerObj)
-        local optionText = show and getText("ContextMenu_KCM_Origin_Hide") or getText("ContextMenu_KCM_Origin_Show")
-        local showOriginOption = context:addOption(optionText, validKeys[1], KCM_ContextMenu.changeShowKeyVector, player)
+        if KCMDataManager:CanShowDirectionVectorTo(playerObj) then
+            local show = KCM_ContextMenu.isShowKeyVector(playerObj)
+            local optionText = show and getText("ContextMenu_KCM_Origin_Hide") or getText("ContextMenu_KCM_Origin_Show")
+            local showOriginOption = context:addOption(optionText, validKeys[1], KCM_ContextMenu.changeShowKeyVector,
+                player)
 
-        local tooltip = ISInventoryPaneContextMenu.addToolTip()
-        tooltip.description = getText("Tooltip_KCM_CM_Origin_Toggle");
-        showOriginOption.toolTip = tooltip
+            local tooltip = ISInventoryPaneContextMenu.addToolTip()
+            tooltip.description = getText("Tooltip_KCM_CM_Origin_Toggle");
+            showOriginOption.toolTip = tooltip
 
-        context:setOptionChecked(showOriginOption, show)
-
+            context:setOptionChecked(showOriginOption, show)
+        end
         local unpackOption = context:addOption("Unpack all duplicates into user inventory", validKeys[1],
             KCM_ContextMenu.putDuplicatesIntoContainer, player);
 
