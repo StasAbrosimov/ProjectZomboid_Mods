@@ -3,6 +3,7 @@
 require 'luautils'
 
 local KCMLib = require("KCMLib")
+local KCMConfing = require("KCM_Options");
 
 --- UI element that renders a directional line toward the key origin
 ShowKeyDirection = ISUIElement:derive("ShowKeyDirection")
@@ -14,8 +15,9 @@ end
 
 local pos = {}
 local diff = {}
-local r, g, b, alpha = 1, 1, 0, 1 -- Vector color (yellow)
-local thickness = 2               -- Vector line thickness
+--local r, g, b, alpha = 1, 1, 0, 1 -- Vector color (yellow)
+local thickness = 2 -- Vector line thickness
+local lineColor = { r = 1, g = 1, b = 0, a = 1 }
 
 -- Renders the direction vector on screen
 function ShowKeyDirection:render()
@@ -72,11 +74,28 @@ function ShowKeyDirection:render()
     local yScreen2 = isoToScreenY(self.playerNum, xEnd, yEnd, pos.Z)
 
     -- Draw line (use Tchernolib if available for advanced styling)
+    lineColor = KCMConfing.LineColor;
+    thickness = KCMConfing.LineThickness
     if luautils.drawLine2 then
-        luautils.drawLine2(xScreen1, yScreen1, xScreen2, yScreen2, alpha, r, g, b, arg, thickness)
+        luautils.drawLine2(xScreen1, yScreen1, xScreen2, yScreen2, lineColor.a, lineColor.r, lineColor.g, lineColor.b,
+            arg, thickness)
     else
-        self:drawLine2(xScreen1, yScreen1, xScreen2, yScreen2, alpha, r, g, b)
+        self:drawLine2Int(xScreen1, yScreen1, xScreen2, yScreen2, lineColor.a, lineColor.r, lineColor.g, lineColor.b, arg,
+            thickness)
     end
+end
+
+function ShowKeyDirection:drawLine2Int(x, y, x2, y2, a, r, g, b, angle, thick)
+    if thick == nil then thick = 2 end
+    if thick < 0 then thick = 0 end
+    local thickX = thick
+    local thickY = thick
+    if angle and thick > 0 then
+        thickX = thick * Math.cos(angle)
+        thickY = thick * Math.sin(angle)
+    end
+    getRenderer():render(nil, x - thickX, y - thickY, x + thickX, y + thickY, x2 + thickX, y2 + thickY, x2 - thickX,
+        y2 - thickY, r, g, b, a, r, g, b, a, r, g, b, a, r, g, b, a, nil);
 end
 
 -- Constructor for creating a ShowKeyDirection element

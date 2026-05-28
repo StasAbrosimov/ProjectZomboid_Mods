@@ -48,16 +48,11 @@ function keyInfo:initStats(item)
         return false
     end
 
-    print("KCM menu")
     -- Ensure the mod's configuration exists
     local sandBoxV = SandboxVars.KeyChainManager or {}
     local compassNeeded = sandBoxV.CompassNeeded
     local showDirectionInfo = KCMConfing.ShowDirectionInItem
     local showKeyId = KCMConfing.ShowKeyId
-
-    print("compassNeeded " .. tostring(compassNeeded));
-    print("showDirectionInfo " .. tostring(showDirectionInfo));
-    print("showKeyId " .. tostring(showKeyId));
 
     md.KSMItem = item;
 
