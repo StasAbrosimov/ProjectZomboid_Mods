@@ -1,6 +1,7 @@
 require "TimedActions/ISInventoryTransferUtil"
 -- KCM_ContextMenu.lua
 
+local KCMConfing = require("KCM_Options");
 local KCMDataManager = require("KCM_ModDataManager");
 
 -- Table to hold all KCM context menu functions
@@ -27,10 +28,10 @@ function KCM_ContextMenu.putDuplicatesIntoContainer(item, player)
         print(item);
         local itemKeyId = item:getKeyId();
         for index, itemToTransfer in ipairs(keysArray) do
-            print(index .. " - " .. tostring(itemToTransfer))
-            print("Is same object:" .. tostring(itemToTransfer == item))
+            -- print(index .. " - " .. tostring(itemToTransfer))
+            -- print("Is same object:" .. tostring(itemToTransfer == item))
             if itemToTransfer ~= item and itemToTransfer:getKeyId() == itemKeyId then
-                print("transfer " .. tostring(itemToTransfer))
+                -- print("transfer " .. tostring(itemToTransfer))
                 ISTimedActionQueue.add(ISInventoryTransferAction:new(playerObj, itemToTransfer,
                     itemToTransfer:getContainer(), playerInventory))
             end
@@ -62,7 +63,7 @@ local function KCM_ContextMenu_toggleShowKeyVector(player, context, items)
 
     -- Only proceed if there's exactly one key with origin
     if #validKeys == 1 then
-        if KCMDataManager:CanShowDirectionVectorTo(playerObj) then
+        if KCMDataManager:CanShowDirectionVectorFor(playerObj) then
             local show = KCM_ContextMenu.isShowKeyVector(playerObj)
             local optionText = show and getText("ContextMenu_KCM_Origin_Hide") or getText("ContextMenu_KCM_Origin_Show")
             local showOriginOption = context:addOption(optionText, validKeys[1], KCM_ContextMenu.changeShowKeyVector,
@@ -74,14 +75,20 @@ local function KCM_ContextMenu_toggleShowKeyVector(player, context, items)
 
             context:setOptionChecked(showOriginOption, show)
         end
-        local unpackOption = context:addOption("Unpack all duplicates into user inventory", validKeys[1],
+        local unpackOption = context:addOption(getText("ContextMenu_KCM_Unpack_Duplicates"), validKeys[1],
             KCM_ContextMenu.putDuplicatesIntoContainer, player);
 
         local unpackTooltip = ISInventoryPaneContextMenu.addToolTip();
         unpackTooltip.description = getText("Tooltip_KCM_CM_Unpack_Duplicates");
         unpackOption.toolTip = unpackTooltip
+
+        if KCMConfing.Debug:IsDebugEnabled() then
+            context:addOption(getText("!Debug! Print KCM variables"), validKeys[1],
+                KCMDataManager.PrintVariablesToConsoleContextMenu, player);
+        end
     end
 end
 
 -- Register the context menu event
+Events.OnFillInventoryObjectContextMenu.Remove(KCM_ContextMenu_toggleShowKeyVector)
 Events.OnFillInventoryObjectContextMenu.Add(KCM_ContextMenu_toggleShowKeyVector)

@@ -1,6 +1,6 @@
 require 'luautils'
 
-local KCMConfing = {
+KCMConfing = KCMConfing or {
     --- Show Direction In Item tooltip
     --- @type boolean
     ShowDirectionInItem = false,
@@ -103,6 +103,7 @@ KCMConfing.Errors.ResetErrorFlags = function()
     KCMConfing.Errors.Is_NO_Luautils_mod_Found = false;
     KCMConfing.Errors:UpdateErrorFlags()
 end
+
 
 KCMConfing.Debug.UpdateErrorDuringTime = function()
     if KCMConfing.Debug:isAnyError() then
@@ -207,6 +208,9 @@ function KCMConfing.Errors:CreateSettingsDebugRegion()
 end
 
 KCMConfing.initOptions = function()
+    if KCMConfing.Options ~= nil then
+        return
+    end
     local Options = PZAPI.ModOptions:create("CP_KCM_Options", getText("IGUI_CP_KCM_Options_Title"))
     KCMConfing.Options = Options;
 
@@ -282,8 +286,10 @@ KCMConfing.initOptions = function()
         end
     end
 
+    Events.OnGameStart.Remove(Options.apply)
     Events.OnGameStart.Add(Options.apply)
     if KCMConfing.Debug:IsDebugEnabled() then
+        Events.EveryOneMinute.Remove(KCMConfing.Debug.UpdateErrorDuringTime)
         Events.EveryOneMinute.Add(KCMConfing.Debug.UpdateErrorDuringTime)
     end
 end

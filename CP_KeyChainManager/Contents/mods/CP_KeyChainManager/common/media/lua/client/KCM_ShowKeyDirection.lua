@@ -4,6 +4,7 @@ require 'luautils'
 
 local KCMLib = require("KCMLib")
 local KCMConfing = require("KCM_Options");
+local KCMDataManager = require("KCM_ModDataManager");
 
 --- UI element that renders a directional line toward the key origin
 ShowKeyDirection = ISUIElement:derive("ShowKeyDirection")
@@ -22,19 +23,20 @@ local lineColor = { r = 1, g = 1, b = 0, a = 1 }
 -- Renders the direction vector on screen
 function ShowKeyDirection:render()
     local md = self.playerObj:getModData()
-    if not md then return end
-
-    local compassNeeded = KCMConfing.CompassNeeded
+    if not md or not md.ShowKeyVector then return end
 
     if not (md.KCMItem and md.ShowKeyVector) then return end
+
+    local compassNeeded = KCMConfing.SandboxVars.CompassNeeded
+    -- print("compassNeeded: " .. tostring(compassNeeded))
     if compassNeeded and not KCMLib.hasCompass(self.playerObj) then
-        if md.ShowKeyVector then
-            self.playerObj:Say("I need a compass...")
-        end
+        -- print("Say message... ")
+        local textToSay = getText(KCMDataManager:GetCompassMessageLocalizationKey(false));
+        print("textToSay: " .. textToSay)
+        self.playerObj:Say(textToSay);
 
-        md.KCMItem = nil;
         md.ShowKeyVector = false;
-
+        -- print("ShowKeyVector: " .. tostring(md.ShowKeyVector))
         return
     end
 
@@ -200,5 +202,8 @@ function ShowKeyDirection.onCharacterDeath(characterObj)
 end
 
 -- Register event hooks
+Events.OnCreatePlayer.Remove(ShowKeyDirection.onCreatePlayer)
 Events.OnCreatePlayer.Add(ShowKeyDirection.onCreatePlayer)
+
+Events.OnCharacterDeath.Remove(ShowKeyDirection.onCharacterDeath)
 Events.OnCharacterDeath.Add(ShowKeyDirection.onCharacterDeath)

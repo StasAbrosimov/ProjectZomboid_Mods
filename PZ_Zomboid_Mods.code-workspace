@@ -4,5 +4,7 @@
 			"path": "."
 		}
 	],
-	"settings": {}
+	"settings": {
+		"Lua.runtime.version": "Lua 5.1"
+	}
 }

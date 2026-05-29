@@ -15,7 +15,7 @@ option KeyChainManager.ForagingLevelForDirection
     max = 10,
     default = 1,
     page = KeyChainManager,
-    translation = KeyChainManager_Foraging_TH_For_Distance,
+    translation = KeyChainManager_Foraging_TH_For_Direction,
 }
 
 option KeyChainManager.ForagingLevelForDistance

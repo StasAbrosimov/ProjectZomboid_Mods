@@ -13,7 +13,6 @@ function keyInfo:_round(num, numDecimalPlaces)
 end
 
 diff = {} -- Table to hold vector differences (distance and direction)
-
 -- Main function: Prepares data to display key origin info in the tooltip
 function keyInfo:initStats(item)
     -- Safety guard: item must exist and expose a callable hasOrigin() method
@@ -50,11 +49,9 @@ function keyInfo:initStats(item)
     end
 
     -- Ensure the mod's configuration exists
-    local compassNeeded = KCMConfing.CompassNeeded
+    local compassNeeded = KCMConfing.SandboxVars.CompassNeeded
     local showDirectionInfo = KCMConfing.ShowDirectionInItem
     local showKeyId = KCMConfing.ShowKeyId
-
-    KCMDataManager:AddNewItemToDraw(item, playerObj, md);
 
     if showDirectionInfo or showKeyId then
         self.Text = {}
@@ -62,110 +59,128 @@ function keyInfo:initStats(item)
         -- Store the item for use in the vector drawing
     end
 
+    KCMDataManager:AddNewItemToDraw(item, playerObj, md);
+
     -- If a compass is needed and the player doesn't have one, do nothing
     local isHaveTextToShow = false;
 
-    if compassNeeded and not KCMLib.hasCompass(playerObj) then
-        if showDirectionInfo then
-            self.Text = { "I need compass to see direction" }
-            self.TextVal = { "" }
-            showDirectionInfo = false
+    if showDirectionInfo then
+        local canShowInfo = KCMDataManager:CanShowKeyInformationFor(playerObj);
+
+        local isHasCompas = KCMLib.hasCompass(playerObj)
+
+        local canShowPlaceInfo = canShowInfo.DirectionVector or canShowInfo.Distance or canShowInfo.Coordinates
+
+        -- print("Key Info:")
+
+        -- print("compassNeeded: " .. tostring(compassNeeded))
+        -- print("isHasCompas: " .. tostring(isHasCompas))
+        -- print("canShowPlaceInfo:" .. tostring(canShowPlaceInfo))
+
+        if compassNeeded and not isHasCompas then
+            -- print("Compass needed and no compass")
+            if canShowPlaceInfo then
+                -- print("No compass message")
+                if self.lastItem ~= item then
+                    self.lastItem = item
+                    self.CompassMessageTextKey = KCMDataManager:GetCompassMessageLocalizationKey(true);
+                end
+
+                self.Text = { (" " .. getText(self.CompassMessageTextKey)) }
+                self.TextVal = { " " }
+                isHaveTextToShow = true;
+            end
+        elseif canShowPlaceInfo then
+            -- print("Can show some info")
+
+            -- Calculate the difference in coordinates between the player and the key's origin
+            diff.X = item:getOriginX() - playerObj:getX()
+            diff.Y = item:getOriginY() - playerObj:getY()
+            diff.Z = item:getOriginZ() - playerObj:getZ()
+            diff.mod = math.sqrt(diff.X * diff.X + diff.Y * diff.Y)
+
+            -- Safety guard: avoid division by zero if origin equals player position
+            if diff.mod == 0 then
+                return false
+            end
+
+            -- Use atan2 so axis-aligned keys don't produce invalid divisions.
+            diff.argRad = math.atan2(diff.X, -diff.Y)
+            diff.arg = diff.argRad * 57.2958 -- Convert radians to degrees
+
+            -- Determine the cardinal direction of the key's origin
+            if diff.arg < -157.5 then
+                diff.dir = "S"
+            elseif diff.arg < -112.5 then
+                diff.dir = "SW"
+            elseif diff.arg < -67.5 then
+                diff.dir = "W"
+            elseif diff.arg < -22.5 then
+                diff.dir = "NW"
+            elseif diff.arg < 22.5 then
+                diff.dir = "N"
+            elseif diff.arg < 67.5 then
+                diff.dir = "NE"
+            elseif diff.arg < 112.5 then
+                diff.dir = "E"
+            elseif diff.arg < 157.5 then
+                diff.dir = "SE"
+            else
+                diff.dir = "S"
+            end
+
+            -- Prepare the text to display in the tooltip
+
+            if canShowInfo.Coordinates then
+                table.insert(self.Text,
+                    " " .. getText("IGUI_KCM_XYZ") .. ":")
+                table.insert(self.TextVal,
+                    string.format("%d, %d, %d", self:_round(diff.X, 0), self:_round(diff.Y, 0), self:_round(diff.Z, 0)) ..
+                    " ")
+            end
+
+            if canShowInfo.Distance then
+                table.insert(self.Text,
+                    " " .. getText("IGUI_KCM_Distance") .. ":")
+                table.insert(self.TextVal,
+                    tostring(self:_round(diff.mod, 0)) .. " ")
+            end
+
+            if canShowInfo.DirectionVector then
+                table.insert(self.Text,
+                    " " .. getText("IGUI_KCM_Direction") .. ":")
+                table.insert(self.TextVal,
+                    string.format("%d (%s)", self:_round(diff.arg, 0), diff.dir) .. " ")
+            end
+
+            -- self.Text = {
+            --     getText("IGUI_KCM_XYZ") .. ":",
+            --     getText("IGUI_KCM_Distance") .. ":",
+            --     getText("IGUI_KCM_Direction") .. ":",
+            -- }
+
+            -- -- Prepare the values that will accompany each label in the tooltip
+            -- self.TextVal = {
+            --     string.format("%d, %d, %d", self:_round(diff.X, 0), self:_round(diff.Y, 0), self:_round(diff.Z, 0)),
+            --     tostring(self:_round(diff.mod, 0)),
+            --     string.format("%d (%s)", self:_round(diff.arg, 0), diff.dir)
+            -- }
             isHaveTextToShow = true;
         end
-    end
-
-    if showDirectionInfo then
-        -- Calculate the difference in coordinates between the player and the key's origin
-        diff.X = item:getOriginX() - playerObj:getX()
-        diff.Y = item:getOriginY() - playerObj:getY()
-        diff.Z = item:getOriginZ() - playerObj:getZ()
-        diff.mod = math.sqrt(diff.X * diff.X + diff.Y * diff.Y)
-
-        -- Safety guard: avoid division by zero if origin equals player position
-        if diff.mod == 0 then
-            return false
-        end
-
-        -- Use atan2 so axis-aligned keys don't produce invalid divisions.
-        diff.argRad = math.atan2(diff.X, -diff.Y)
-        diff.arg = diff.argRad * 57.2958 -- Convert radians to degrees
-
-        -- Determine the cardinal direction of the key's origin
-        if diff.arg < -157.5 then
-            diff.dir = "S"
-        elseif diff.arg < -112.5 then
-            diff.dir = "SW"
-        elseif diff.arg < -67.5 then
-            diff.dir = "W"
-        elseif diff.arg < -22.5 then
-            diff.dir = "NW"
-        elseif diff.arg < 22.5 then
-            diff.dir = "N"
-        elseif diff.arg < 67.5 then
-            diff.dir = "NE"
-        elseif diff.arg < 112.5 then
-            diff.dir = "E"
-        elseif diff.arg < 157.5 then
-            diff.dir = "SE"
-        else
-            diff.dir = "S"
-        end
-
-        -- Prepare the text to display in the tooltip
-
-        if KCMDataManager:CanShowCoordinatesTo(playerObj) then
-            table.insert(self.Text,
-                getText("IGUI_KCM_XYZ") .. ":")
-            table.insert(self.TextVal,
-                string.format("%d, %d, %d", self:_round(diff.X, 0), self:_round(diff.Y, 0), self:_round(diff.Z, 0)))
-        end
-
-        if KCMDataManager:CanShowDistanceTo(playerObj) then
-            table.insert(self.Text,
-                getText("IGUI_KCM_Distance") .. ":")
-            table.insert(self.TextVal,
-                tostring(self:_round(diff.mod, 0)))
-        end
-
-        if KCMDataManager:CanShowDirectionVectorTo(playerObj) then
-            table.insert(self.Text,
-                getText("IGUI_KCM_Direction") .. ":")
-            table.insert(self.TextVal,
-                string.format("%d (%s)", self:_round(diff.arg, 0), diff.dir))
-        end
-
-        -- self.Text = {
-        --     getText("IGUI_KCM_XYZ") .. ":",
-        --     getText("IGUI_KCM_Distance") .. ":",
-        --     getText("IGUI_KCM_Direction") .. ":",
-        -- }
-
-        -- -- Prepare the values that will accompany each label in the tooltip
-        -- self.TextVal = {
-        --     string.format("%d, %d, %d", self:_round(diff.X, 0), self:_round(diff.Y, 0), self:_round(diff.Z, 0)),
-        --     tostring(self:_round(diff.mod, 0)),
-        --     string.format("%d (%s)", self:_round(diff.arg, 0), diff.dir)
-        -- }
-
-        isHaveTextToShow = true;
     end
 
     if showKeyId then
         local keyId = tostring(item:getKeyId())
         if self.Text ~= nil and #self.Text > 0 then
-            table.insert(self.Text, getText("IGUI_KCM_Id") .. ":")
+            table.insert(self.Text, " " .. getText("IGUI_KCM_Key_Fingerprint") .. ":")
         else
-            self.Text = {
-                getText("IGUI_KCM_Id") .. ":",
-            }
+            self.Text = { " " .. getText("IGUI_KCM_Key_Fingerprint") .. ":", }
         end
 
         if self.TextVal ~= nil and #self.TextVal > 0 then
-            table.insert(self.TextVal, keyId)
+            table.insert(self.TextVal, keyId .. " ")
         else
-            self.TextVal = {
-                keyId,
-            }
+            self.TextVal = { keyId .. " ", }
         end
 
         isHaveTextToShow = true;

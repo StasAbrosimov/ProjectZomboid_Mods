@@ -1,5 +1,0 @@
-{
-    "Sandbox_KeyChainManager": "Key Chain Manager",
-    "Sandbox_KeyChainManager_CompassNeeded": "Se necesita brújula para ver el origen de llaves",
-    "Sandbox_KeyChainManager_CompassNeeded_tooltip": "Cuando está habilitado, el origen de las llaves solo se mostrará si tienes una brújula en tu inventario."
-}

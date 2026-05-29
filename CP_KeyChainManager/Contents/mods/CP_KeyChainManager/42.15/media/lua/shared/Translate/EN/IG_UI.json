@@ -1,6 +1,14 @@
 {
-    "IGUI_KCM_XYZ": " X, Y, Z",
-    "IGUI_KCM_Distance": " Distance",
-    "IGUI_KCM_Direction": " Direction",
-    "IGUI_KCM_Id": " Id"
+    "IGUI_KCM_XYZ": "X, Y, Z",
+    "IGUI_KCM_Distance": "Distance",
+    "IGUI_KCM_Direction": "Direction",
+    "IGUI_KCM_Key_Fingerprint": "Fingerprint",
+    "IGUI_KCM_Need_A_Compass_0": "I need compass... ",
+    "IGUI_KCM_Need_A_Compass_1": "I need compass to navigate ",
+    "IGUI_KCM_Need_A_Compass_2": "I need to find compass ",
+    "IGUI_KCM_Need_A_Compass_3": "I need a compass to get a bearing ",
+    "IGUI_KCM_Need_A_Compass_4": "Can't orient the map without a compass ",
+    "IGUI_KCM_Need_A_Compass_5": "I need a compass to find the heading to that object ",
+    "IGUI_KCM_Need_A_Compass_6": "I can't lock down the direction without a compass ",
+    "IGUI_KCM_Need_A_Compass_7": "I need a compass to navigate to that target "
 }
