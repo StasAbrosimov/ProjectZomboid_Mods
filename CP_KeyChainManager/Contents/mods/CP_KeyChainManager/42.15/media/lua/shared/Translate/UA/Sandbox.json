@@ -1,0 +1,17 @@
+{
+    "Sandbox_CP_KCM_KeyChainManagerPage": "Менеджер ключів",
+    "Sandbox_CP_KCM_KeyChainManagerPage_CompassNeeded": "Щоб показати походження ключа потрібен компас",
+    "Sandbox_CP_KCM_KeyChainManagerPage_CompassNeeded_tooltip": "Коли ця функція ввімкнена, інформація про походження відображатиметься лише за наявності компаса в інвентарі.",
+    "Sandbox_CP_KCM_KeyChainManagerPage_Foraging_TH_For_Direction": "Рівень Збиральництва для напрямку",
+    "Sandbox_CP_KCM_KeyChainManagerPage_Foraging_TH_For_Direction_tooltip": "Мінімальний рівень навички \"Збиральництва\" для відображення напрямку на походження ключа. 0 для вимкнення залежності рівня, 11 для повного вимкення",
+    "Sandbox_CP_KCM_KeyChainManagerPage_Foraging_TH_For_Distance": "Рівень Збиральництва для дістанції",
+    "Sandbox_CP_KCM_KeyChainManagerPage_Foraging_TH_For_Distance_tooltip": "Мінімальний рівень навички \"Збиральництва\" для відображення дістанції до походження ключа. 0 для вимкнення залежності рівня, 11 для повного вимкення",
+    "Sandbox_CP_KCM_KeyChainManagerPage_Foraging_TH_For_Coordinates": "Рівень Збиральництва для координат",
+    "Sandbox_CP_KCM_KeyChainManagerPage_Foraging_TH_For_Coordinates_tooltip": "Мінімальний рівень навички \"Збиральництва\" для відображення координат походження ключа. 0 для вимкнення залежності рівня, 11 для повного вимкення",
+    "Sandbox_CP_KCM_KeyChainManagerPage_Distance_Drawing_Base_Time": "Час відображення вектора напрямку",
+    "Sandbox_CP_KCM_KeyChainManagerPage_Distance_Drawing_Base_Time_tooltip": "Базовий час, протягом якого відображатиметься лінія від гравця до місця, пов'язаного з ключем",
+    "Sandbox_CP_KCM_KeyChainManagerPage_Distance_Drawing_Time_Modificator": "Модифікатор часу відображення вектора напрямку",
+    "Sandbox_CP_KCM_KeyChainManagerPage_Distance_Drawing_Time_Modificator_tooltip": "Кожен рівень \"Збиральництва\" додаватиме певний відсоток від базового часу. Наприклад: базовий час – 5, модифікатор – 10, рівень пошуку їжі – 6, (5*10*6)/100=3. Три хвилини додадуться до базового часу, а кінцевий час становитиме 5+3 = 8.",
+    "Sandbox_CP_KCM_KeyChainManagerPage_IsDebugSendBox": "Це ізольоване середовище для налагодження",
+    "Sandbox_CP_KCM_KeyChainManagerPage_IsDebugSendBox_tooltip": "Залиште як є (вимкнено). Цей прапорець визначає, чи повинен мод завантажуватися в режимі налагодження (навіть коли гра запущена нормально). Він потрібен для швидкого усунення несправностей та діагностики мода."
+}

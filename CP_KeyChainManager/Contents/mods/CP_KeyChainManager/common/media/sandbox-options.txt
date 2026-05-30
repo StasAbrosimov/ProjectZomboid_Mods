@@ -1,67 +1,67 @@
 VERSION = 1,
 
-option KeyChainManager.CompassNeeded
+option CP_KeyChainManager.CompassNeeded
 {
     type = boolean,
     default = true,
-    page = KeyChainManager,
-    translation = KeyChainManager_CompassNeeded,
+    page = CP_KCM_KeyChainManagerPage,
+    translation = CP_KCM_KeyChainManagerPage_CompassNeeded,
 }
 
-option KeyChainManager.ForagingLevelForDirection
+option CP_KeyChainManager.ForagingLevelForDirection
 {
     type = integer,
-    min = -1,
-    max = 10,
+    min = 0,
+    max = 11,
     default = 1,
-    page = KeyChainManager,
-    translation = KeyChainManager_Foraging_TH_For_Direction,
+    page = CP_KCM_KeyChainManagerPage,
+    translation = CP_KCM_KeyChainManagerPage_Foraging_TH_For_Direction,
 }
 
-option KeyChainManager.ForagingLevelForDistance
+option CP_KeyChainManager.ForagingLevelForDistance
 {
     type = integer,
-    min = -1,
-    max = 10,
+    min = 0,
+    max = 11,
     default = 2,
-    page = KeyChainManager,
-    translation = KeyChainManager_Foraging_TH_For_Distance,
+    page = CP_KCM_KeyChainManagerPage,
+    translation = CP_KCM_KeyChainManagerPage_Foraging_TH_For_Distance,
 }
 
-option KeyChainManager.ForagingLevelForCoordinates
+option CP_KeyChainManager.ForagingLevelForCoordinates
 {
     type = integer,
-    min = -1,
-    max = 10,
+    min = 0,
+    max = 11,
     default = 3,
-    page = KeyChainManager,
-    translation = KeyChainManager_Foraging_TH_For_Coordinates,
+    page = CP_KCM_KeyChainManagerPage,
+    translation = CP_KCM_KeyChainManagerPage_Foraging_TH_For_Coordinates,
 }
 
-option KeyChainManager.BaseTimeDirectionVisible
+option CP_KeyChainManager.BaseTimeDirectionVisible
 {
     type = double,
     min = 0.0,
     max = 100.0,
     default = 5.0,
-    page = KeyChainManager,
-    translation = KeyChainManager_Distance_Drawing_Base_Time,
+    page = CP_KCM_KeyChainManagerPage,
+    translation = CP_KCM_KeyChainManagerPage_Distance_Drawing_Base_Time,
 }
 
-option KeyChainManager.ByForagingLevelTimeDirectionVisibleModificator
+option CP_KeyChainManager.ByForagingLevelTimeDirectionVisibleModificator
 {
     type = double,
     min = 0.0,
     max = 100.0,
     default = 10.0,
-    page = KeyChainManager,
-    translation = KeyChainManager_Distance_Drawing_Time_Modificator,
+    page = CP_KCM_KeyChainManagerPage,
+    translation = CP_KCM_KeyChainManagerPage_Distance_Drawing_Time_Modificator,
 }
 
-option KeyChainManager.IsDebugSendBox
+option CP_KeyChainManager.IsDebugSendBox
 {
     type = boolean,
     default = false,
-    page = KeyChainManager,
-    translation = KeyChainManager_IsDebugSendBox,
+    page = CP_KCM_KeyChainManagerPage,
+    translation = CP_KCM_KeyChainManagerPage_IsDebugSendBox,
 }

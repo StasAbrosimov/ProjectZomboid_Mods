@@ -1,5 +1,11 @@
 require 'luautils'
 
+---@class RgbColor
+---@field a number
+---@field r number
+---@field g number
+---@field b number
+
 KCMConfing = KCMConfing or {
     --- Show Direction In Item tooltip
     --- @type boolean
@@ -14,7 +20,7 @@ KCMConfing = KCMConfing or {
     DrawTheDirectionLineForKeyItem = true,
 
     --- Direction line color
-    --- @type color
+    --- @type RgbColor
     LineColor = { a = 1.0, r = 1.0, g = 1.0, b = 0.0 },
 
     --- Direction thicnes
@@ -195,7 +201,7 @@ function KCMConfing.Errors:CreateSettingsDebugRegion()
 
     KCMConfing.modOptions.Is_NO_Luautils_mod_Found = KCMConfing.Options:addTickBox(
         "CP_KCM_DEBUG_Is_NO_Luautils_mod_Found",
-        "Is_NO_Luautils_mod_Found", false, "Is_NO_Luautils_mod_Found");
+        "Is_NO_Luautils_from_TchernoLib_mod_Found", false, "Is_NO_Luautils_mod_Found");
 
     KCMConfing.modOptions.ResetErrorsButton = KCMConfing.Options:addButton("CP_KCM_DEBUG_ResetErrors",
         "Reset errors", "Reset displayed errors for code and this page", KCMConfing.Errors.ResetErrorFlags);
@@ -227,7 +233,7 @@ KCMConfing.initOptions = function()
 
     KCMConfing.modOptions.ShowKeyId = Options:addTickBox("CP_KCM_ShowKeyID",
         getText("IGUI_CP_KCM_Options_ShowKeyID"),
-        false,
+        true,
         getText("IGUI_CP_KCM_Options_ShowKeyID_tooltip"));
 
     Options:addSeparator()
@@ -242,21 +248,19 @@ KCMConfing.initOptions = function()
 
 
     KCMConfing.modOptions.LineColorPiker = Options:addColorPicker("CP_KCM_Drawing_LineColor",
-        getText("IGUI_CP_KCM_Options_Drawing_LineColor"), 1.0, 1.0, 0, 1.0,
-        getText("IGUI_CP_KCM_Options_Drawing_LineColor"))
+        getText("IGUI_CP_KCM_Options_Drawing_LineColor"), 0.4, 1.0, 0, 1.0,
+        getText("IGUI_CP_KCM_Options_Drawing_LineColor_tooltip"))
 
     KCMConfing.modOptions.LineThicknessSlider = Options:addSlider("CP_KCM_Drawing_Line_Thickness",
         getText("IGUI_CP_KCM_Options_Drawing_Line_Thickness"),
-        1.0, 20.0, 1.0, 2.0,
+        1.0, 20.0, 1.0, 4.0,
         getText("IGUI_CP_KCM_Options_Drawing_Line_Thickness_tooltip"));
 
     KCMConfing.modOptions.LineThicknessSliderTooltip = Options:addDescription(getText(
         "IGUI_CP_KCM_Options_Drawing_Line_Thickness_tooltip"));
 
-    KCMConfing.Debug.isDebugSendBox = isDebugEnabled();
-
     -- sandbox options init
-    local sandBoxV = SandboxVars.KeyChainManager or {}
+    local sandBoxV = SandboxVars.CP_KeyChainManager or {}
 
     KCMConfing.SandboxVars.CompassNeeded = sandBoxV.CompassNeeded or true; -- default true
     KCMConfing.SandboxVars.ForagingLevelForDirection = sandBoxV.ForagingLevelForDirection or
@@ -272,11 +276,17 @@ KCMConfing.initOptions = function()
         .ByForagingLevelTimeDirectionVisibleModificator or
         10.0 -- default 10.0
 
-    if not isDebugEnabled() then
-        KCMConfing.Debug.isDebugSendBox = sandBoxV.IsDebugSendBox or false;
-    end
+    KCMConfing.Debug.isDebugSendBox = isDebugEnabled() or sandBoxV.IsDebugSendBox;
 
     if KCMConfing.Debug.isDebugSendBox then
+        if not luautils.drawLine2 then
+            KCMConfing.Errors.Is_NO_Luautils_mod_Found = true
+            KCMConfing.modOptions.LineThicknessSliderTooltip = Options:addDescription(getText(
+                "If game do not react on line appearance options then try install TchernoLib mod. \n Place it higher in the mod order."));
+        else
+            KCMConfing.Errors.Is_NO_Luautils_mod_Found = false
+        end
+
         KCMConfing.Errors:CreateSettingsDebugRegion()
     end
 
@@ -300,10 +310,13 @@ KCMConfing.initOptions = function()
 
 
         if KCMConfing.Debug.isDebugSendBox then
-            local sandBoxV = SandboxVars.KeyChainManager or {}
+            local sandBoxV = SandboxVars.CP_KeyChainManager or {}
             print("KCM in debug mode, ignore sendbox settings")
             print("KCM sendbox debug settings: " .. tostring(sandBoxV.IsDebugSendBox or false));
-
+            print("LineColor: r:" .. tostring(KCMConfing.LineColor.r) ..
+                " g:" .. tostring(KCMConfing.LineColor.g) ..
+                " b:" .. tostring(KCMConfing.LineColor.b) ..
+                " a:" .. tostring(KCMConfing.LineColor.a));
             KCMConfing.Debug.isPrintOnDrawDebug = KCMConfing.modOptions.IsPrintDebugDrawCalls:getValue();
             KCMConfing.Debug.PrintErrorsOnTick = KCMConfing.modOptions.PrintErrorsOnTick:getValue();
         end

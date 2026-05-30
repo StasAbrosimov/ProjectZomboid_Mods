@@ -32,7 +32,7 @@ function ShowKeyDirection:render()
     if compassNeeded and not KCMLib.hasCompass(self.playerObj) then
         -- print("Say message... ")
         local textToSay = getText(KCMDataManager:GetCompassMessageLocalizationKey(false));
-        print("textToSay: " .. textToSay)
+        --print("textToSay: " .. textToSay)
         self.playerObj:Say(textToSay);
 
         md.ShowKeyVector = false;

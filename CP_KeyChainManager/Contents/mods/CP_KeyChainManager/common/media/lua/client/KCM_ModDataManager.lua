@@ -40,6 +40,10 @@ function KCMDataManager:AddNewItemToDraw(item, player, playerMD)
         if playerMD.ShowKeyVector then
             playerMD.ticksToFinishDraw = KCMConfing.SandboxVars.BaseTimeDirectionVisible;
 
+            if not playerMD.ticksToFinishDraw or playerMD.ticksToFinishDraw < 0 then
+                return
+            end
+
             Events.EveryOneMinute.Remove(self.UpdateDuringTime)
 
             if playerMD.ticksToFinishDraw > 0.0 and playerMD.ShowKeyVector then

@@ -1,5 +1,17 @@
 {
-    "Sandbox_KeyChainManager": "Key Chain Manager",
-    "Sandbox_KeyChainManager_CompassNeeded": "Compass is needed to show key origin",
-    "Sandbox_KeyChainManager_CompassNeeded_tooltip": "When enabled, key origin only will be shown if you have a compass in your inventory."
+    "Sandbox_CP_KCM_KeyChainManagerPage": "Keychain Manager",
+    "Sandbox_CP_KCM_KeyChainManagerPage_CompassNeeded": "Compass is needed to show key origin",
+    "Sandbox_CP_KCM_KeyChainManagerPage_CompassNeeded_tooltip": "When enabled, key origin only will be shown if you have a compass in your inventory.",
+    "Sandbox_CP_KCM_KeyChainManagerPage_Foraging_TH_For_Direction": "Foraging level for direction",
+    "Sandbox_CP_KCM_KeyChainManagerPage_Foraging_TH_For_Direction_tooltip": "Minimal level of \"Foraging\" skill to display direction on key origin. 0 to disable level dependency, 11 for turn off completely",
+    "Sandbox_CP_KCM_KeyChainManagerPage_Foraging_TH_For_Distance": "Foraging level for distance",
+    "Sandbox_CP_KCM_KeyChainManagerPage_Foraging_TH_For_Distance_tooltip": "Minimal level of \"Foraging\" skill to display distance to key origin. 0 to disable level dependency, 11 for turn off completely",
+    "Sandbox_CP_KCM_KeyChainManagerPage_Foraging_TH_For_Coordinates": "Foraging level for coordinates",
+    "Sandbox_CP_KCM_KeyChainManagerPage_Foraging_TH_For_Coordinates_tooltip": "Minimal level of \"Foraging\" skill to display coordinates of key origin. 0 to disable level dependency, 11 for turn off completely",
+    "Sandbox_CP_KCM_KeyChainManagerPage_Distance_Drawing_Base_Time": "Direction vector display time",
+    "Sandbox_CP_KCM_KeyChainManagerPage_Distance_Drawing_Base_Time_tooltip": "The base time during which the line from the player to the location associated with the key will be displayed",
+    "Sandbox_CP_KCM_KeyChainManagerPage_Distance_Drawing_Time_Modificator": "Line display time modifier",
+    "Sandbox_CP_KCM_KeyChainManagerPage_Distance_Drawing_Time_Modificator_tooltip": "Each level of Foraging will add some amount of percentage from base time value. For example: base time is 5, modifier is 10, foraging level is 6, (5*10*6)/100=3. Tre minutes will add to base time and result time will be 5+3 = 8",
+    "Sandbox_CP_KCM_KeyChainManagerPage_IsDebugSendBox": "Is debug sandbox",
+    "Sandbox_CP_KCM_KeyChainManagerPage_IsDebugSendBox_tooltip": "Leave it as is (disabled). This flag determines whether the mod should load in debug mode (even when the game is launched normally). It's needed for quick troubleshooting and diagnostics of the mod"
 }
