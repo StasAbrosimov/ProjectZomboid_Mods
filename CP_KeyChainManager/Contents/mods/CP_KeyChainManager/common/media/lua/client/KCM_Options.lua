@@ -9,6 +9,10 @@ KCMConfing = KCMConfing or {
     --- @type boolean
     ShowKeyId = false,
 
+    --- Show key id In Item tooltip
+    --- @type boolean
+    DrawTheDirectionLineForKeyItem = true,
+
     --- Direction line color
     --- @type color
     LineColor = { a = 1.0, r = 1.0, g = 1.0, b = 0.0 },
@@ -211,7 +215,7 @@ KCMConfing.initOptions = function()
     if KCMConfing.Options ~= nil then
         return
     end
-    local Options = PZAPI.ModOptions:create("CP_KCM_Options", getText("IGUI_CP_KCM_Options_Title"))
+    local Options = PZAPI.ModOptions:create("IGUI_CP_KCM_Options", getText("IGUI_CP_KCM_Options_Title"))
     KCMConfing.Options = Options;
 
     KCMConfing.modOptions = {}
@@ -229,6 +233,12 @@ KCMConfing.initOptions = function()
     Options:addSeparator()
     Options:addDescription(
         "IGUI_CP_KCM_Options_DrawingOptionsTitle")
+
+
+    KCMConfing.modOptions.DrawTheDirectionLineForTheItem = Options:addTickBox("CP_KCM_DrawTheDirectionLineForTheItem",
+        getText("IGUI_CP_KCM_Options_DrawDirectionLineForItem"),
+        true,
+        getText("IGUI_CP_KCM_Options_DrawDirectionLineForItem_tooltip"));
 
 
     KCMConfing.modOptions.LineColorPiker = Options:addColorPicker("CP_KCM_Drawing_LineColor",
@@ -273,10 +283,12 @@ KCMConfing.initOptions = function()
     Options.apply = function()
         KCMConfing.ShowDirectionForItem = KCMConfing.modOptions.ShowDirectionForItem:getValue();
         KCMConfing.ShowKeyId = KCMConfing.modOptions.ShowKeyId:getValue();
+
+        KCMConfing.DrawTheDirectionLineForKeyItem = KCMConfing.modOptions.DrawTheDirectionLineForTheItem:getValue();
         KCMConfing.LineColor = KCMConfing.modOptions.LineColorPiker:getValue();
         KCMConfing.LineThickness = KCMConfing.modOptions.LineThicknessSlider:getValue();
 
-        if not KCMConfing.ShowDirectionForItem then
+        if not KCMConfing.ShowDirectionForItem or not KCMConfing.DrawTheDirectionLineForKeyItem then
             local playerObj = getPlayer()
             if playerObj then
                 local md = playerObj:getModData()

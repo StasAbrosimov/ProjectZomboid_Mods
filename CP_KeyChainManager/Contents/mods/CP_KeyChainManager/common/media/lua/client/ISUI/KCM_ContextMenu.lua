@@ -67,29 +67,30 @@ local function KCM_ContextMenu_toggleShowKeyVector(player, context, items)
 
     -- Only proceed if there's exactly one key with origin
     if #validKeys == 1 then
-        if KCMDataManager:CanShowDirectionVectorFor(playerObj) then
+        if KCMDataManager:CanDrawDirectionVectorLineFor(playerObj) then
             local show = KCM_ContextMenu.isShowKeyVector(playerObj)
-            local optionText = show and getText("ContextMenu_KCM_Origin_Hide") or getText("ContextMenu_KCM_Origin_Show")
+            local optionText = show and getText("ContextMenu_CP_KCM_Origin_Hide") or
+                getText("ContextMenu_CP_KCM_Origin_Show")
             local showOriginOption = context:addOption(optionText, validKeys[1], KCM_ContextMenu.changeShowKeyVector,
                 player)
 
             local tooltip = ISInventoryPaneContextMenu.addToolTip()
-            tooltip.description = getText("Tooltip_KCM_CM_Origin_Toggle");
+            tooltip.description = getText("Tooltip_CP_KCM_CM_Origin_Toggle");
             showOriginOption.toolTip = tooltip
 
             context:setOptionChecked(showOriginOption, show)
         end
-        local unpackOption = context:addOption(getText("ContextMenu_KCM_Unpack_Duplicates"), validKeys[1],
+        local unpackOption = context:addOption(getText("ContextMenu_CP_KCM_Unpack_Duplicates"), validKeys[1],
             KCM_ContextMenu.putDuplicatesIntoContainer, player);
 
         local unpackTooltip = ISInventoryPaneContextMenu.addToolTip();
-        unpackTooltip.description = getText("Tooltip_KCM_CM_Unpack_Duplicates");
+        unpackTooltip.description = getText("Tooltip_CP_KCM_CM_Unpack_Duplicates");
         unpackOption.toolTip = unpackTooltip
 
-        if KCMConfing.Debug:IsDebugEnabled() then
-            context:addOption(getText("!Debug! Print KCM variables"), validKeys[1],
-                KCMDataManager.PrintVariablesToConsoleContextMenu, player);
-        end
+        -- if KCMConfing.Debug:IsDebugEnabled() then
+        --     context:addOption(getText("!Debug! Print KCM variables"), validKeys[1],
+        --         KCMDataManager.PrintVariablesToConsoleContextMenu, player);
+        -- end
     end
 end
 

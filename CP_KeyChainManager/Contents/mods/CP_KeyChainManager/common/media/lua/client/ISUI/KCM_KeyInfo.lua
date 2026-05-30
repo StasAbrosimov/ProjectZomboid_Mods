@@ -57,7 +57,10 @@ function keyInfo:initStats(item)
         self.Text = {}
         self.TextVal = {}
         -- Store the item for use in the vector drawing
+    else
+        return false
     end
+
 
     KCMDataManager:AddNewItemToDraw(item, playerObj, md);
 
@@ -110,30 +113,30 @@ function keyInfo:initStats(item)
 
             -- Determine the cardinal direction of the key's origin
             if diff.arg < -157.5 then
-                diff.dir = getTextOrNull("IGUI_KCM_Direction_South") or "S" --"S"
+                diff.dir = getTextOrNull("IGUI_CP_KCM_Direction_South") or "S" --"S"
             elseif diff.arg < -112.5 then
-                diff.dir = getTextOrNull("IGUI_KCM_Direction_SouthWest") or "SW"
+                diff.dir = getTextOrNull("IGUI_CP_KCM_Direction_SouthWest") or "SW"
             elseif diff.arg < -67.5 then
-                diff.dir = getTextOrNull("IGUI_KCM_Direction_West") or "W"
+                diff.dir = getTextOrNull("IGUI_CP_KCM_Direction_West") or "W"
             elseif diff.arg < -22.5 then
-                diff.dir = getTextOrNull("IGUI_KCM_Direction_NorthWest") or "NW"
+                diff.dir = getTextOrNull("IGUI_CP_KCM_Direction_NorthWest") or "NW"
             elseif diff.arg < 22.5 then
-                diff.dir = getTextOrNull("IGUI_KCM_Direction_North") or "N"
+                diff.dir = getTextOrNull("IGUI_CP_KCM_Direction_North") or "N"
             elseif diff.arg < 67.5 then
-                diff.dir = getTextOrNull("IGUI_KCM_Direction_NorthEast") or "NE"
+                diff.dir = getTextOrNull("IGUI_CP_KCM_Direction_NorthEast") or "NE"
             elseif diff.arg < 112.5 then
-                diff.dir = getTextOrNull("IGUI_KCM_Direction_East") or "E"
+                diff.dir = getTextOrNull("IGUI_CP_KCM_Direction_East") or "E"
             elseif diff.arg < 157.5 then
-                diff.dir = getTextOrNull("IGUI_KCM_Direction_SouthEast") or "SE"
+                diff.dir = getTextOrNull("IGUI_CP_KCM_Direction_SouthEast") or "SE"
             else
-                diff.dir = getTextOrNull("IGUI_KCM_Direction_South") or "S"
+                diff.dir = getTextOrNull("IGUI_CP_KCM_Direction_South") or "S"
             end
 
             -- Prepare the text to display in the tooltip
 
             if canShowInfo.Coordinates then
                 table.insert(self.Text,
-                    " " .. getText("IGUI_KCM_XYZ") .. ":")
+                    " " .. getText("IGUI_CP_KCM_XYZ") .. ":")
                 table.insert(self.TextVal,
                     string.format("%d, %d, %d", self:_round(diff.X, 0), self:_round(diff.Y, 0), self:_round(diff.Z, 0)) ..
                     " ")
@@ -141,22 +144,22 @@ function keyInfo:initStats(item)
 
             if canShowInfo.Distance then
                 table.insert(self.Text,
-                    " " .. getText("IGUI_KCM_Distance") .. ":")
+                    " " .. getText("IGUI_CP_KCM_Distance") .. ":")
                 table.insert(self.TextVal,
                     tostring(self:_round(diff.mod, 0)) .. " ")
             end
 
             if canShowInfo.DirectionVector then
                 table.insert(self.Text,
-                    " " .. getText("IGUI_KCM_Direction") .. ":")
+                    " " .. getText("IGUI_CP_KCM_Direction") .. ":")
                 table.insert(self.TextVal,
                     string.format("%d (%s)", self:_round(diff.arg, 0), diff.dir) .. " ")
             end
 
             -- self.Text = {
-            --     getText("IGUI_KCM_XYZ") .. ":",
-            --     getText("IGUI_KCM_Distance") .. ":",
-            --     getText("IGUI_KCM_Direction") .. ":",
+            --     getText("IGUI_CP_KCM_XYZ") .. ":",
+            --     getText("IGUI_CP_KCM_Distance") .. ":",
+            --     getText("IGUI_CP_KCM_Direction") .. ":",
             -- }
 
             -- -- Prepare the values that will accompany each label in the tooltip
@@ -172,9 +175,9 @@ function keyInfo:initStats(item)
     if showKeyId then
         local keyId = tostring(item:getKeyId())
         if self.Text ~= nil and #self.Text > 0 then
-            table.insert(self.Text, " " .. getText("IGUI_KCM_Key_Fingerprint") .. ":")
+            table.insert(self.Text, " " .. getText("IGUI_CP_KCM_Key_Fingerprint") .. ":")
         else
-            self.Text = { " " .. getText("IGUI_KCM_Key_Fingerprint") .. ":", }
+            self.Text = { " " .. getText("IGUI_CP_KCM_Key_Fingerprint") .. ":", }
         end
 
         if self.TextVal ~= nil and #self.TextVal > 0 then

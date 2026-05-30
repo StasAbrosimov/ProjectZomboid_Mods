@@ -34,7 +34,7 @@ KCMDataManager.UpdateDuringTime = function()
 end
 
 function KCMDataManager:AddNewItemToDraw(item, player, playerMD)
-    if KCMDataManager:CanShowDirectionVectorFor(player) then
+    if KCMDataManager:CanDrawDirectionVectorLineFor(player) then
         if playerMD then playerMD.KCMItem = item or playerMD.KCMItem; end
 
         if playerMD.ShowKeyVector then
@@ -79,9 +79,9 @@ function KCMDataManager:CanShowKeyInformationFor(player)
     };
 end
 
-function KCMDataManager:CanShowDirectionVectorFor(player)
+function KCMDataManager:CanDrawDirectionVectorLineFor(player)
     -- PlantScavenging is foraging
-    return KCMConfing.ShowDirectionForItem and
+    return KCMConfing.ShowDirectionForItem and KCMConfing.DrawTheDirectionLineForKeyItem and
         KCMConfing.SandboxVars.ForagingLevelForDirection <= player:getPerkLevel(Perks.PlantScavenging);
 end
 
@@ -93,7 +93,7 @@ function KCMDataManager:GetCompassMessageLocalizationKey(isForTooltip)
 
     local index = ZombRand(localizationIndexMax);
 
-    return "IGUI_KCM_Need_A_Compass_" .. tostring(index)
+    return "IGUI_CP_KCM_Need_A_Compass_" .. tostring(index)
 end
 
 KCMDataManager.PrintVariablesToConsoleContextMenu = function(item, player)
