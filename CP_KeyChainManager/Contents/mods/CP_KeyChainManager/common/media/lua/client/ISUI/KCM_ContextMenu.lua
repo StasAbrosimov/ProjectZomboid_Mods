@@ -15,6 +15,10 @@ function KCM_ContextMenu.changeShowKeyVector(item, player)
     if not md then return end
 
     md.ShowKeyVector = not md.ShowKeyVector
+
+    if md.ShowKeyVector then
+        KCMDataManager:AddNewItemToDraw(nil, playerObj, md)
+    end
 end
 
 function KCM_ContextMenu.putDuplicatesIntoContainer(item, player)

@@ -12,22 +12,22 @@ KCMDataManager.UpdateDuringTime = function()
     for player, playerMD in pairs(KCMDataManager.playersToWatch) do
         if playerMD ~= nil and playerMD.ShowKeyVector then
             activePlayers = activePlayers + 1
-            print("OnStart ");
-            print("playerMD.ticksToFinishDraw: " .. tostring(playerMD.ticksToFinishDraw))
+            --print("OnStart ");
+            --print("playerMD.ticksToFinishDraw: " .. tostring(playerMD.ticksToFinishDraw))
             playerMD.ticksToFinishDraw = playerMD.ticksToFinishDraw - 1.0
 
             if playerMD.ticksToFinishDraw < 0.0 then
-                print("Stop Showing ");
+                --print("Stop Showing ");
                 playerMD.KCMItem = nil
                 KCMDataManager.playersToWatch[player] = nil
             end
-            print("OnFinish ");
-            print("playerMD.ticksToFinishDraw: " .. tostring(playerMD.ticksToFinishDraw))
+            --print("OnFinish ");
+            --print("playerMD.ticksToFinishDraw: " .. tostring(playerMD.ticksToFinishDraw))
         end
     end
 
     if activePlayers == 0 then
-        -- print("Unsubscribe from event ");
+        --print("Unsubscribe from event ");
         KCMDataManager.playersToWatch = {}
         Events.EveryOneMinute.Remove(KCMDataManager.UpdateDuringTime)
     end
@@ -35,7 +35,7 @@ end
 
 function KCMDataManager:AddNewItemToDraw(item, player, playerMD)
     if KCMDataManager:CanShowDirectionVectorFor(player) then
-        playerMD.KCMItem = item;
+        if playerMD then playerMD.KCMItem = item or playerMD.KCMItem; end
 
         if playerMD.ShowKeyVector then
             playerMD.ticksToFinishDraw = KCMConfing.SandboxVars.BaseTimeDirectionVisible;
@@ -51,6 +51,8 @@ function KCMDataManager:AddNewItemToDraw(item, player, playerMD)
                 self.playersToWatch[player] = playerMD;
             end
         end
+    elseif playerMD then
+        playerMD.KCMItem = nil
     end
 end
 
@@ -62,17 +64,25 @@ local whatCanSow = {}
 
 ---@return WhatCanSow
 function KCMDataManager:CanShowKeyInformationFor(player)
-    local foragingLevel = player:getPerkLevel(Perks.PlantScavenging)
+    if KCMConfing.ShowDirectionForItem then
+        local foragingLevel = player:getPerkLevel(Perks.PlantScavenging)
+        return {
+            DirectionVector = KCMConfing.SandboxVars.ForagingLevelForDirection <= foragingLevel,
+            Distance = KCMConfing.SandboxVars.ForagingLevelForDistance <= foragingLevel,
+            Coordinates = KCMConfing.SandboxVars.ForagingLevelForCoordinates <= foragingLevel,
+        };
+    end
     return {
-        DirectionVector = KCMConfing.SandboxVars.ForagingLevelForDirection <= foragingLevel,
-        Distance = KCMConfing.SandboxVars.ForagingLevelForDistance <= foragingLevel,
-        Coordinates = KCMConfing.SandboxVars.ForagingLevelForCoordinates <= foragingLevel,
+        DirectionVector = false,
+        Distance = false,
+        Coordinates = false,
     };
 end
 
 function KCMDataManager:CanShowDirectionVectorFor(player)
-    local foragingLevel = player:getPerkLevel(Perks.PlantScavenging) -- PlantScavenging is foraging
-    return KCMConfing.SandboxVars.ForagingLevelForDirection <= foragingLevel;
+    -- PlantScavenging is foraging
+    return KCMConfing.ShowDirectionForItem and
+        KCMConfing.SandboxVars.ForagingLevelForDirection <= player:getPerkLevel(Perks.PlantScavenging);
 end
 
 function KCMDataManager:GetCompassMessageLocalizationKey(isForTooltip)

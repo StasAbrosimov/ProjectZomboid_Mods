@@ -3,7 +3,7 @@ require 'luautils'
 KCMConfing = KCMConfing or {
     --- Show Direction In Item tooltip
     --- @type boolean
-    ShowDirectionInItem = false,
+    ShowDirectionForItem = false,
 
     --- Show key id In Item tooltip
     --- @type boolean
@@ -216,10 +216,10 @@ KCMConfing.initOptions = function()
 
     KCMConfing.modOptions = {}
 
-    KCMConfing.modOptions.ShowDirectionInItem = Options:addTickBox("CP_KCM_ShowDirectionInItem",
-        getText("IGUI_CP_KCM_Options_ShowDirectionInItem"),
+    KCMConfing.modOptions.ShowDirectionForItem = Options:addTickBox("CP_KCM_ShowDirectionForItem",
+        getText("IGUI_CP_KCM_Options_ShowDirectionForItem"),
         true,
-        getText("IGUI_CP_KCM_Options_ShowDirectionInItem_tooltip"));
+        getText("IGUI_CP_KCM_Options_ShowDirectionForItem_tooltip"));
 
     KCMConfing.modOptions.ShowKeyId = Options:addTickBox("CP_KCM_ShowKeyID",
         getText("IGUI_CP_KCM_Options_ShowKeyID"),
@@ -271,10 +271,21 @@ KCMConfing.initOptions = function()
     end
 
     Options.apply = function()
-        KCMConfing.ShowDirectionInItem = KCMConfing.modOptions.ShowDirectionInItem:getValue();
+        KCMConfing.ShowDirectionForItem = KCMConfing.modOptions.ShowDirectionForItem:getValue();
         KCMConfing.ShowKeyId = KCMConfing.modOptions.ShowKeyId:getValue();
         KCMConfing.LineColor = KCMConfing.modOptions.LineColorPiker:getValue();
         KCMConfing.LineThickness = KCMConfing.modOptions.LineThicknessSlider:getValue();
+
+        if not KCMConfing.ShowDirectionForItem then
+            local playerObj = getPlayer()
+            if playerObj then
+                local md = playerObj:getModData()
+                if md then
+                    md.ShowKeyVector = false;
+                end
+            end
+        end
+
 
         if KCMConfing.Debug.isDebugSendBox then
             local sandBoxV = SandboxVars.KeyChainManager or {}

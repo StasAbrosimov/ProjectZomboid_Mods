@@ -50,7 +50,7 @@ function keyInfo:initStats(item)
 
     -- Ensure the mod's configuration exists
     local compassNeeded = KCMConfing.SandboxVars.CompassNeeded
-    local showDirectionInfo = KCMConfing.ShowDirectionInItem
+    local showDirectionInfo = KCMConfing.ShowDirectionForItem
     local showKeyId = KCMConfing.ShowKeyId
 
     if showDirectionInfo or showKeyId then
@@ -99,9 +99,9 @@ function keyInfo:initStats(item)
             diff.Z = item:getOriginZ() - playerObj:getZ()
             diff.mod = math.sqrt(diff.X * diff.X + diff.Y * diff.Y)
 
-            -- Safety guard: avoid division by zero if origin equals player position
+            --Safety guard: avoid division by zero if origin equals player position
             if diff.mod == 0 then
-                return false
+                diff.mod = 0.0001
             end
 
             -- Use atan2 so axis-aligned keys don't produce invalid divisions.
@@ -110,23 +110,23 @@ function keyInfo:initStats(item)
 
             -- Determine the cardinal direction of the key's origin
             if diff.arg < -157.5 then
-                diff.dir = "S"
+                diff.dir = getTextOrNull("IGUI_KCM_Direction_South") or "S" --"S"
             elseif diff.arg < -112.5 then
-                diff.dir = "SW"
+                diff.dir = getTextOrNull("IGUI_KCM_Direction_SouthWest") or "SW"
             elseif diff.arg < -67.5 then
-                diff.dir = "W"
+                diff.dir = getTextOrNull("IGUI_KCM_Direction_West") or "W"
             elseif diff.arg < -22.5 then
-                diff.dir = "NW"
+                diff.dir = getTextOrNull("IGUI_KCM_Direction_NorthWest") or "NW"
             elseif diff.arg < 22.5 then
-                diff.dir = "N"
+                diff.dir = getTextOrNull("IGUI_KCM_Direction_North") or "N"
             elseif diff.arg < 67.5 then
-                diff.dir = "NE"
+                diff.dir = getTextOrNull("IGUI_KCM_Direction_NorthEast") or "NE"
             elseif diff.arg < 112.5 then
-                diff.dir = "E"
+                diff.dir = getTextOrNull("IGUI_KCM_Direction_East") or "E"
             elseif diff.arg < 157.5 then
-                diff.dir = "SE"
+                diff.dir = getTextOrNull("IGUI_KCM_Direction_SouthEast") or "SE"
             else
-                diff.dir = "S"
+                diff.dir = getTextOrNull("IGUI_KCM_Direction_South") or "S"
             end
 
             -- Prepare the text to display in the tooltip

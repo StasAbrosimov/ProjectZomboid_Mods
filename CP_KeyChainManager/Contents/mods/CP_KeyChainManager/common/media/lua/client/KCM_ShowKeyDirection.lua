@@ -55,6 +55,8 @@ function ShowKeyDirection:render()
 
     -- Calculate vector direction angle
     diff.mod = math.sqrt(diff.X * diff.X + diff.Y * diff.Y)
+
+    --Safety guard: avoid division by zero if origin equals player position
     if diff.mod == 0 then return end
     local arg = math.atan2(diff.Y, diff.X) -- Angle in radians
 
