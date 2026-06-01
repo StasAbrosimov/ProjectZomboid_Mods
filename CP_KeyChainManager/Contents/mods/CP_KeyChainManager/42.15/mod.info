@@ -1,6 +1,6 @@
 name=Keychain Manager
 id=CP_KeyChainManager
-modversion=1.0.1
+modversion=1.0.2
 versionMin=42.15
 description=Helps you locate where a key belongs. Can handle duplicates. Shows distance and direction to a key's origin in the tooltip, and can draw a guiding vector from the context menu. <LINE>Almost every aspect of the mod can be customized. <LINE>Details can be found on the mod's page. <BR>This Workshop version supports Build 42.15+. <BR>If game do not react on line appearance options then try install TchernoLib mod. <LINE>Place it higher in the mod order. <BR>Based on "Show Key Origin" by Afyrmo.
 icon=icon.png

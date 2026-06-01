@@ -6,7 +6,7 @@
     "Sandbox_CP_KCM_KeyChainManagerPage_Foraging_TH_For_Direction_tooltip": "Minimal level of \"Foraging\" skill to display direction on key origin. 0 to disable level dependency, 11 for turn off completely",
     "Sandbox_CP_KCM_KeyChainManagerPage_Foraging_TH_For_Distance": "Foraging level for distance",
     "Sandbox_CP_KCM_KeyChainManagerPage_Foraging_TH_For_Distance_tooltip": "Minimal level of \"Foraging\" skill to display distance to key origin. 0 to disable level dependency, 11 for turn off completely",
-    "Sandbox_CP_KCM_KeyChainManagerPage_Foraging_TH_For_Coordinates": "Foraging level for direction",
+    "Sandbox_CP_KCM_KeyChainManagerPage_Foraging_TH_For_Coordinates": "Foraging level for coordinates",
     "Sandbox_CP_KCM_KeyChainManagerPage_Foraging_TH_For_Coordinates_tooltip": "Minimal level of \"Foraging\" skill to display coordinates of key origin. 0 to disable level dependency, 11 for turn off completely",
     "Sandbox_CP_KCM_KeyChainManagerPage_Distance_Drawing_Base_Time": "Direction vector display time",
     "Sandbox_CP_KCM_KeyChainManagerPage_Distance_Drawing_Base_Time_tooltip": "The base time during which the line from the player to the location associated with the key will be displayed",

@@ -1,5 +1,5 @@
 {
-    "ContextMenu_CP_KCM_Origin_Hide": "Hide Key Origin Vector",
-    "ContextMenu_CP_KCM_Origin_Show": "Show Key Origin Vector",
-    "ContextMenu_CP_KCM_Unpack_Duplicates": "Unpack all duplicates"
+    "ContextMenu_CP_KCM_Origin_Hide": "Спрятать вектор на связанное место",
+    "ContextMenu_CP_KCM_Origin_Show": "Показать вектор на связанное место",
+    "ContextMenu_CP_KCM_Unpack_Duplicates": "Распаковать все дубликаты"
 }
