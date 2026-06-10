@@ -2,39 +2,23 @@ version=1
 id=3735659907
 title=Keychain Manager
 description=For build 42.15+
-
 description=Helps you locate where a key belongs. Shows distance and direction to a keys origin in the tooltip, and can draw a guiding vector from the context menu.
-
 description=Can handle duplicates. There is an option in the context menu that will extract all duplicates of the selected key into the players main inventory.
-
 description=
-
 description=Almost every aspect of the mod can be customized.
-
 description=
-
 description=The coordinates, direction, and distance to the object opened with the key are linked to the "Foraging" skill.
-
 description=The mod can be customized: show or hide individual pieces of information, the keys target vector, and the keys fingerprint.
-
 description=
-
 description=Contains translation for: EN, UA, RU
 description=For all other languages there are english templates.
 description=Translation for each language will be added in subsequent mod updates.
-
 description=
-
 description=This Workshop version supports Build 42.15+.
-
 description=If game do not react on line appearance options then try install TchernoLib mod. Place it higher in the mod order.
-
 description=Based on "Show Key Origin" by Afyrmo.
-
 description=
-
 description=Known issues:
-
 description=- Car keys. They show the cars original position. If the car has been moved, they will point to an empty space. The location is stored in the keys metadata. A solution is being sought.
 description=
 description=Version 1.0.1
