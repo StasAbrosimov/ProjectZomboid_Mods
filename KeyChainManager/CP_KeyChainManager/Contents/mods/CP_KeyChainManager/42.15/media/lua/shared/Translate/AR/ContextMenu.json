@@ -1,5 +1,5 @@
 {
-    "ContextMenu_CP_KCM_Origin_Hide": "Hide Key Origin Vector",
-    "ContextMenu_CP_KCM_Origin_Show": "Show Key Origin Vector",
-    "ContextMenu_CP_KCM_Unpack_Duplicates": "Unpack all duplicates"
+    "ContextMenu_CP_KCM_Origin_Hide": "Ocultar dirección hacia el origen de la llave",
+    "ContextMenu_CP_KCM_Origin_Show": "Mostrar dirección hacia el origen de la llave",
+    "ContextMenu_CP_KCM_Unpack_Duplicates": "Desempaquetar todos los duplicados"
 }

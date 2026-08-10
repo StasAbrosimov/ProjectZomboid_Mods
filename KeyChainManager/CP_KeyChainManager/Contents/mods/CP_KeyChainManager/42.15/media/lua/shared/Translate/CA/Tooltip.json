@@ -1,4 +1,5 @@
 {
-    "Tooltip_CP_KCM_CM_Origin_Toggle": "Change the visibility of the vector from the player to the key origin.",
-    "Tooltip_CP_KCM_CM_Unpack_Duplicates": "Search through your inventory and unpack all duplicates into your pockets."
+  "Tooltip_CP_KCM_CM_Origin_Toggle": "Canvia la visibilitat del vector des del jugador fins al punt d'origen de la clau.",
+  "Tooltip_CP_KCM_CM_Unpack_Duplicates": "Revisa tots els contenidors i desempaqueta tots els duplicats a l'inventari principal."
+
 }
